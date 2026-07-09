@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ημερολόγιο Κεραμικής 2026 · Ceramics Calendar 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --slip:#E6E7E2;        /* raw porcelain slip */
+  --slip-2:#DCDED7;
+  --ink:#20262A;         /* slate */
+  --ink-soft:#5D666B;
+  --rule:#C7CAC2;
+
+  --celadon:#7E9C8A;     /* competition */
+  --kilnblue:#4A6B7C;    /* biennale */
+  --straw:#A9843F;       /* fair */
+  --manganese:#77577A;   /* festival */
+  --graphite:#6B7175;    /* conference */
+  --copper:#A8412C;      /* today + deadlines */
+
+  --row-h:48px;
+  --label-w:268px;
+  --month-w:74px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--slip);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1400px;margin:0 auto;padding:32px 20px 64px}
+
+/* ---------- header ---------- */
+.eyebrow{
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-soft);margin:0 0 14px;
+}
+h1{
+  font-family:Alegreya,Georgia,serif;
+  font-weight:500;font-size:clamp(30px,4.4vw,50px);
+  line-height:1.06;letter-spacing:-.01em;margin:0 0 12px;max-width:22ch;
+}
+.lede{max-width:60ch;color:var(--ink-soft);margin:0 0 26px;font-size:15px}
+.lede b{color:var(--ink);font-weight:500}
+
+/* ---------- controls ---------- */
+.bar{
+  display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+  padding:14px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  margin-bottom:22px;
+}
+.group{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.glabel{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);
+  margin-right:2px;
+}
+button{font:inherit;color:inherit}
+.chip{
+  border:1px solid var(--rule);background:transparent;border-radius:2px;
+  padding:5px 11px;font-size:12.5px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:background .12s,border-color .12s;
+}
+.chip:hover{border-color:var(--ink-soft)}
+.chip .swatch{width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.9}
+.chip[aria-pressed="true"]{background:#fff;border-color:var(--ink)}
+.chip[aria-pressed="false"]{opacity:.42}
+.chip.c-competition{color:var(--celadon)} .chip.c-biennale{color:var(--kilnblue)}
+.chip.c-fair{color:var(--straw)} .chip.c-festival{color:var(--manganese)}
+.chip.c-conference{color:var(--graphite)}
+.chip span.txt{color:var(--ink)}
+
+.switch{
+  border:1px solid var(--rule);background:transparent;border-radius:2px;
+  padding:5px 11px;font-size:12.5px;cursor:pointer;
+}
+.switch[aria-pressed="true"]{background:var(--ink);color:var(--slip);border-color:var(--ink)}
+
+.lang{display:inline-flex;border:1px solid var(--ink);border-radius:2px;overflow:hidden;margin-left:auto}
+.lang button{background:transparent;border:0;padding:5px 12px;font-size:12px;cursor:pointer;letter-spacing:.06em}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--slip)}
+
+/* ---------- legend ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:8px 26px;margin:0 0 16px;font-size:12px;color:var(--ink-soft)}
+.legend div{display:flex;align-items:center;gap:9px}
+.lg{width:30px;height:12px;border-radius:1px;flex:none}
+.lg.green{border:1.5px solid var(--celadon);background:transparent}
+.lg.live{background:var(--celadon)}
+.lg.fired{background:var(--celadon);opacity:.24}
+.lg.cone{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid var(--copper);border-radius:0}
+.lg.now{width:2px;height:14px;background:var(--copper)}
+
+/* ---------- chart ---------- */
+.scroller{
+  overflow:auto;max-height:min(70vh,720px);
+  border:1px solid var(--rule);background:#F1F2EE;
+  position:relative;
+}
+.grid{position:relative;width:max-content;min-width:100%}
+
+.head{display:flex;position:sticky;top:0;z-index:6}
+.corner{
+  width:var(--label-w);flex:none;position:sticky;left:0;z-index:7;
+  background:#EAEBE6;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);
+}
+.months{display:flex;background:#EAEBE6;border-bottom:1px solid var(--rule)}
+.yrs{display:flex;position:sticky;top:0}
+.mo{
+  width:var(--month-w);flex:none;text-align:center;
+  font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+  padding:16px 0 7px;border-left:1px solid var(--rule);position:relative;
+}
+.mo.jan{border-left:1px solid var(--ink-soft)}
+.mo .yr{
+  position:absolute;top:3px;left:5px;font-family:Alegreya,serif;
+  font-size:12px;letter-spacing:0;text-transform:none;color:var(--ink);
+}
+
+.rows{position:relative}
+.row{display:flex;height:var(--row-h);border-bottom:1px solid rgba(199,202,194,.55)}
+.row:hover .label{background:#fff}
+.row.sel .label{background:#fff;box-shadow:inset 3px 0 0 var(--ink)}
+.label{
+  width:var(--label-w);flex:none;position:sticky;left:0;z-index:4;
+  background:#F1F2EE;border-right:1px solid var(--rule);
+  padding:7px 12px 7px 14px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  transition:background .12s;
+}
+.label .t{
+  font-family:Alegreya,Georgia,serif;font-size:14.5px;line-height:1.18;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.label{cursor:pointer}
+.label .t a{
+  color:inherit;text-decoration:none;
+  border-bottom:1px solid transparent;padding-bottom:1px;
+  transition:color .12s,border-color .12s;
+}
+.label .t a:hover{color:var(--copper);border-bottom-color:var(--copper)}
+.label .t a:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:1px}
+.label .t a .out{opacity:0;font-size:10px;margin-left:4px;transition:opacity .12s}
+.label .t a:hover .out,.label .t a:focus-visible .out{opacity:.7}
+.label .m{
+  font-size:10.5px;color:var(--ink-soft);letter-spacing:.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;
+}
+.gr-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--copper);margin-right:6px;vertical-align:1px}
+
+.track{position:relative;flex:1}
+.track .gl{position:absolute;top:0;bottom:0;width:1px;background:rgba(199,202,194,.5)}
+.track .gl.jan{background:rgba(93,102,107,.45)}
+
+.bar{
+  position:absolute;top:50%;transform:translateY(-50%);
+  height:16px;border-radius:1px;border:0;padding:0;cursor:pointer;
+  min-width:5px;
+}
+.bar:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.bar.upcoming{background:transparent;border:1.5px solid currentColor}
+.bar.live{background:currentColor}
+.bar.past{background:currentColor;opacity:.22}
+.bar.approx::after{
+  content:"";position:absolute;right:0;top:0;bottom:0;width:14px;
+  background:repeating-linear-gradient(115deg,transparent 0 3px,#F1F2EE 3px 5px);
+}
+.b-competition{color:var(--celadon)} .b-biennale{color:var(--kilnblue)}
+.b-fair{color:var(--straw)} .b-festival{color:var(--manganese)}
+.b-conference{color:var(--graphite)}
+
+.cone{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
+  border-bottom:9px solid var(--copper);z-index:3;
+}
+.cone.done{opacity:.3}
+
+.now{position:absolute;top:0;bottom:0;width:2px;background:var(--copper);z-index:5;pointer-events:none}
+.now::before{
+  content:attr(data-l);position:absolute;top:2px;left:6px;
+  font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);
+  white-space:nowrap;background:#F1F2EE;padding:1px 3px;
+}
+
+/* ---------- detail ---------- */
+.detail{
+  margin-top:18px;border:1px solid var(--rule);background:#F1F2EE;
+  padding:20px 22px;min-height:132px;
+}
+.detail .hint{color:var(--ink-soft);font-size:13.5px;margin:0}
+.detail h2{font-family:Alegreya,serif;font-weight:500;font-size:23px;margin:0 0 6px;line-height:1.2}
+.kv{display:flex;flex-wrap:wrap;gap:4px 30px;margin:12px 0 0;font-size:13px}
+.kv div{min-width:150px}
+.kv dt{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 2px}
+.kv dd{margin:0}
+.dl{color:var(--copper);font-weight:500}
+.detail a.link{
+  display:inline-block;margin-top:16px;color:var(--ink);font-size:13px;
+  border-bottom:1px solid var(--ink);text-decoration:none;padding-bottom:1px;
+}
+.detail a.link:hover{color:var(--copper);border-color:var(--copper)}
+.tag{
+  display:inline-block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  border:1px solid currentColor;padding:2px 7px;border-radius:1px;
+}
+
+.count{font-size:12px;color:var(--ink-soft);margin:14px 0 0}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-soft);max-width:70ch}
+footer a{color:var(--ink-soft)}
+
+@media (max-width:640px){
+  .wrap{padding:24px 12px 48px}
+  :root{--label-w:180px;--month-w:60px}
+  .lang{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow" id="eyebrow">Ceramics Now · Calendar</p>
+  <h1 id="title">Ημερολόγιο κεραμικής 2026</h1>
+  <p class="lede" id="lede"></p>
+
+  <div class="bar">
+    <div class="group" id="cats">
+      <span class="glabel" id="l-cats">Είδος</span>
+    </div>
+    <div class="group">
+      <button class="switch" id="pastBtn" aria-pressed="false"></button>
+    </div>
+    <div class="lang">
+      <button id="btn-el" aria-pressed="true">ΕΛ</button>
+      <button id="btn-en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="scroller" id="scroller">
+    <div class="grid" id="grid">
+      <div class="head">
+        <div class="corner"></div>
+        <div class="months" id="months"></div>
+      </div>
+      <div class="rows" id="rows"></div>
+    </div>
+  </div>
+
+  <p class="count" id="count"></p>
+
+  <div class="detail" id="detail"></div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+/* ============ data (from ceramicsnow.org calendar2025 + calendar2026) ============ */
+const CO = {
+  LV:["Latvia","Λετονία"], PT:["Portugal","Πορτογαλία"], ES:["Spain","Ισπανία"],
+  JP:["Japan","Ιαπωνία"], SI:["Slovenia","Σλοβενία"], GR:["Greece","Ελλάδα"],
+  FR:["France","Γαλλία"], CN:["China","Κίνα"], IT:["Italy","Ιταλία"],
+  TW:["Taiwan","Ταϊβάν"], DE:["Germany","Γερμανία"], AT:["Austria","Αυστρία"],
+  CH:["Switzerland","Ελβετία"], KR:["South Korea","Νότια Κορέα"], BE:["Belgium","Βέλγιο"],
+  US:["USA","ΗΠΑ"], AU:["Australia","Αυστραλία"], UK:["UK","Ην. Βασίλειο"],
+  SG:["Singapore","Σιγκαπούρη"], IN:["India","Ινδία"]
+};
+
+const EV = [
+  {t:"Esplugues Angelina Alós International Ceramic Biennial", c:"competition", s:"2025-07-14", e:"2026-01-11", city:"Esplugues de Llobregat", co:"ES", u:"https://museus.esplugues.cat/en/biennial"},
+  {t:"Latvia Ceramics Biennale — Martinsons Award", c:"competition", s:"2025-09-05", e:"2026-02-01", city:"Daugavpils", co:"LV", u:"https://rothkomuseum.com/en/for-artists/biennaleeng/"},
+  {t:"XVII Biennale of Artistic Ceramics of Aveiro", c:"competition", s:"2025-10-18", e:"2026-01-18", city:"Aveiro", co:"PT", u:"https://bienalceramicaaveiro.pt/"},
+  {t:"The 11th Kikuchi Biennale", c:"competition", s:"2025-12-13", e:"2026-03-22", city:"Tomo Museum, Tokyo", co:"JP", u:"https://biennale.musee-tomo.or.jp/en/"},
+
+  {t:"ceramic brussels 2026", c:"fair", s:"2026-01-21", e:"2026-01-25", city:"Brussels", co:"BE", u:"https://ceramic.brussels/en/"},
+  {t:"6th Siegburg International Ceramics Award", c:"competition", s:"2026-02-01", e:"2026-04-12", city:"Siegburg", co:"DE", u:"https://tourismus-siegburg.de/keramik-in-siegburg/keramikpreis/"},
+  {t:"NCECA 2026 — Volumes", c:"conference", s:"2026-03-25", e:"2026-03-28", city:"Detroit, Michigan", co:"US", u:"https://nceca.net/"},
+  {t:"Clay Gulgong 2026", c:"festival", s:"2026-04-11", e:"2026-04-17", city:"Gulgong, NSW", co:"AU", u:"https://www.mansfieldceramics.com/clay-gulgong/about/"},
+  {t:"CCACA 2026", c:"conference", s:"2026-04-24", e:"2026-04-25", city:"Davis, California", co:"US", u:"https://natsoulas.com/about"},
+  {t:"XVII International Ceramic Biennial of Manises", c:"competition", s:"2026-05-08", e:"2026-07-31", city:"Manises", co:"ES", u:"https://www.museumanises.es/va/page/xvii-biennal-internacional-ceramica-manises"},
+  {t:"Ceramic Art London 2026", c:"fair", s:"2026-05-08", e:"2026-05-10", city:"London", co:"UK", u:"https://www.ceramicartlondon.com/"},
+  {t:"LOEWE Craft Prize 2026", c:"competition", s:"2026-05-13", e:"2026-06-14", city:"National Gallery", co:"SG", u:"https://craftprize.loewe.com/en/craftprize2026"},
+  {t:"Diessener Töpfermarkt Young Ceramics Award", c:"competition", s:"2026-05-14", e:"2026-05-17", city:"Dießen am Ammersee", co:"DE", u:"https://www.diessener-toepfermarkt.de/foerderpreis/"},
+  {t:"6th International Ceramics Triennial UNICUM 2026", c:"competition", s:"2026-05-15", e:"2026-10-15", city:"Ljubljana", co:"SI", u:"https://www.nms.si/en/events/2025/12/01/12107-Call-for-applications-to-participate-in-the-exhibition-of-artistic-ceramics-UNICUM-2026"},
+  {t:"43rd Concurs Internacional de Ceràmica de l'Alcora", c:"competition", s:"2026-05-16", e:"2026-09-06", city:"L'Alcora", co:"ES", u:"https://www.mundoarti.com/concursos/CTO4679/concurso-internacional-de-cermica-de-l-alcora-cica-2026/"},
+  {t:"Ceramic Market Andenne — Li Dièle 2026", c:"fair", s:"2026-05-24", e:"2026-05-25", city:"Andenne", co:"BE", u:"https://ceramicartandenne.be/markets/li-diele-2026/"},
+  {t:"cerARTmic Madrid 2026", c:"fair", s:"2026-06-04", e:"2026-06-07", city:"Madrid", co:"ES", u:"https://www.cerartmic.com/"},
+  {t:"Höhr-Grenzhausen Ceramics Market 2026", c:"fair", s:"2026-06-06", e:"2026-06-07", city:"Höhr-Grenzhausen", co:"DE", u:"https://www.kannenbaeckerland.de/keramik/keramikmuseum/maerkte/keramikmarkt/"},
+  {t:"Marché Céramique Contemporaine Giroussens", c:"fair", s:"2026-06-06", e:"2026-06-07", city:"Giroussens", co:"FR", u:"https://www.terre-et-terres.com/marche-giroussens/marche-ceramique-contemporaine-giroussens-6-et-7-juin-2026/"},
+  {t:"Biennale of Contemporary Keramics 2026", c:"biennale", s:"2026-06-07", e:"2026-10-31", approx:true, city:"Rhodes", co:"GR", u:"https://bigbluedot.art/bck-2026/"},
+  {t:"Saint-Sulpice Céramique 2026", c:"fair", s:"2026-06-25", e:"2026-06-28", city:"Place Saint Sulpice, Paris", co:"FR", u:"https://saintsulpiceceramique.com/en/home/"},
+  {t:"Jingdezhen International Ceramic Art Biennale", c:"competition", s:"2026-06-26", e:"2027-03-31", city:"Jingdezhen", co:"CN", u:"http://www.cjicb.com/index_en.html"},
+  {t:"IAC 52nd Congress", c:"conference", s:"2026-06-27", e:"2026-07-02", city:"Jingdezhen", co:"CN", u:"https://jingdezhen2026.aic-iac.org/"},
+  {t:"33rd Mediterraneo Ceramics Competition", c:"competition", s:"2026-07-04", e:"2026-10-18", city:"Grottaglie", co:"IT", u:"https://comune.grottaglie.ta.it/it/news/disciplinare-xxxiii-concorso-di-ceramica-contemporanea-mediterraneo-grottaglie-4-luglio-18-ottobre-2026"},
+  {t:"Terralha 2026 — European Ceramic Festival", c:"festival", s:"2026-07-12", e:"2026-07-14", city:"Saint-Quentin-la-Poterie", co:"FR", u:"https://capitale-ceramique.com/terralha-festival-ceramique/"},
+  {t:"2026 Taiwan Ceramics Biennale", c:"biennale", s:"2026-07-31", e:"2026-12-27", city:"Yingge Ceramics Museum", co:"TW", u:"https://en.ceramics.ntpc.gov.tw/"},
+  {t:"International Ceramics Days Oldenburg 2026", c:"fair", s:"2026-08-01", e:"2026-08-02", city:"Oldenburg", co:"DE", u:"https://en.keramiktage.com/"},
+  {t:"Austrian Pottery Market 2026", c:"fair", s:"2026-08-28", e:"2026-08-30", city:"Gmunden", co:"AT", u:"https://www.gmunden.at/kultur-freizeit-tourismus/toepfermarkt/bewerbung-application/"},
+  {t:"6th Officine Saffi Award", c:"competition", s:"2026-09-01", e:"2026-09-30", approx:true, dl:"2026-06-26", city:"Fondazione Officine Saffi, Milan", co:"IT", u:"https://officinesaffi.org/en/award/award"},
+  {t:"Argillà Italia 2026", c:"fair", s:"2026-09-04", e:"2026-09-06", city:"Faenza", co:"IT", u:"https://www.argilla-italia.it/en/"},
+  {t:"Carouge International Ceramics Competition", c:"competition", s:"2026-09-19", e:"2026-11-29", city:"Carouge, Geneva", co:"CH", u:"https://www.carouge.ch/cic"},
+  {t:"C14 Paris 2026", c:"fair", s:"2026-10-01", e:"2026-10-04", city:"Paris", co:"FR", u:"https://c14paris.com/en/"},
+  {t:"Gyeonggi Ceramics Biennale 2026", c:"competition", s:"2026-10-01", e:"2026-10-31", approx:true, city:"Gyeonggi Province", co:"KR", u:"https://www.gmocca.org/eng/biennale"},
+  {t:"XIV Ceramics Biennial of El Vendrell", c:"competition", s:"2026-11-13", e:"2027-01-16", dl:"2026-08-02", city:"El Vendrell, Catalonia", co:"ES", u:"https://www.elvendrell.net/art/ceramica/biennal-de-ceramica"},
+  {t:"14th Shiwan Cup Youth Ceramic Sculpture Competition", c:"competition", s:"2026-12-01", e:"2026-12-31", approx:true, dl:"2026-08-31", city:"Foshan, Guangdong", co:"CN", u:"https://www.swcm.org.cn/#/info/detail?Id=1060&menuId=16&language=English"},
+
+  {t:"ceramic brussels 2027", c:"fair", s:"2027-01-20", e:"2027-01-24", city:"Brussels", co:"BE", u:"https://ceramic.brussels/en/"},
+  {t:"14th International Ceramics Festival MINO", c:"competition", s:"2027-10-08", e:"2027-11-07", dl:"2027-01-29", city:"Tajimi, Gifu", co:"JP", u:"https://www.icfmino.com/en/iccm-en"},
+  {t:"Indian Ceramics Triennale 2027", c:"biennale", s:"2027-11-05", e:"2027-12-23", city:"NGMA, Mumbai", co:"IN", u:"https://www.indianceramicstriennale.com/ict2027"}
+];
+
+/* ============ i18n ============ */
+const T = {
+  el:{
+    title:"Ημερολόγιο κεραμικής 2026",
+    lede:"Διαγωνισμοί, μπιενάλε, φεστιβάλ και φουάρ, σχεδιασμένα σαν <b>πρόγραμμα όπτησης</b>. Η χάλκινη γραμμή είναι το σήμερα: ό,τι βρίσκεται αριστερά της έχει ψηθεί, ό,τι δεξιά είναι ακόμα άψητο.",
+    cats:"Είδος", past:"Δείξε τα περασμένα", pastOn:"Κρύψε τα περασμένα",
+    now:"σήμερα",
+    types:{competition:"Διαγωνισμός",biennale:"Μπιενάλε",fair:"Φουάρ",festival:"Φεστιβάλ",conference:"Συνέδριο"},
+    lg:["Άψητο — δεν ξεκίνησε","Στη φωτιά — σε εξέλιξη","Ψημένο — ολοκληρώθηκε","Προθεσμία αίτησης","Σήμερα"],
+    hint:"Διάλεξε μια μπάρα για λεπτομέρειες.",
+    k:{dates:"Ημερομηνίες",place:"Τόπος",type:"Είδος",dl:"Προθεσμία αίτησης",status:"Κατάσταση"},
+    st:{upcoming:"Δεν έχει ξεκινήσει",live:"Σε εξέλιξη",past:"Ολοκληρώθηκε"},
+    dlPassed:"πέρασε", dlIn:"σε {n} μέρες", dlToday:"σήμερα",
+    link:"Επίσκεψη ιστοσελίδας →",
+    count:"{n} από {tot} events · {d} ανοιχτές προθεσμίες",
+    approx:"κατά προσέγγιση",
+    months:["Ιαν","Φεβ","Μάρ","Απρ","Μάι","Ιούν","Ιούλ","Αύγ","Σεπ","Οκτ","Νοέ","Δεκ"],
+    footer:'Δεδομένα από το <a href="https://www.ceramicsnow.org/calendar2026/">Ceramics Calendar 2026</a> και το <a href="https://www.ceramicsnow.org/calendar2025/">2025</a> του Ceramics Now, όπως διαβάστηκαν στις 9 Ιουλίου 2026. Ορισμένες ημερομηνίες δίνονται μόνο ως μήνας — αυτές οι μπάρες εμφανίζονται με διαγράμμιση στο τέλος. Επιβεβαίωσε πάντα στην επίσημη σελίδα κάθε διοργάνωσης.',
+    dot:"Στην Ελλάδα"
+  },
+  en:{
+    title:"Ceramics calendar 2026",
+    lede:"Competitions, biennales, festivals and fairs, drawn as a <b>firing schedule</b>. The copper line is today: everything to its left has been fired, everything to the right is still greenware.",
+    cats:"Type", past:"Show past events", pastOn:"Hide past events",
+    now:"today",
+    types:{competition:"Competition",biennale:"Biennale",fair:"Fair",festival:"Festival",conference:"Conference"},
+    lg:["Greenware — not started","In the kiln — running now","Fired — finished","Application deadline","Today"],
+    hint:"Select a bar for details.",
+    k:{dates:"Dates",place:"Place",type:"Type",dl:"Application deadline",status:"Status"},
+    st:{upcoming:"Not started",live:"Running now",past:"Finished"},
+    dlPassed:"passed", dlIn:"in {n} days", dlToday:"today",
+    link:"Visit website →",
+    count:"{n} of {tot} events · {d} open deadlines",
+    approx:"approximate",
+    months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    footer:'Data from Ceramics Now\'s <a href="https://www.ceramicsnow.org/calendar2026/">Ceramics Calendar 2026</a> and <a href="https://www.ceramicsnow.org/calendar2025/">2025</a>, as read on 9 July 2026. Some dates are given only as a month — those bars are hatched at the end. Always confirm on each organiser\'s own page.',
+    dot:"In Greece"
+  }
+};
+
+/* ============ state ============ */
+const CATS = ["competition","biennale","fair","festival","conference"];
+let lang = "el";
+let on = new Set(CATS);
+let showPast = false;
+let sel = null;
+
+const NOW = new Date();
+const START_Y = 2025, START_M = 6;           // July 2025
+const N_MONTHS = 30;                          // → December 2027
+const MW = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--month-w'));
+
+const d = s => new Date(s + "T00:00:00");
+const dim = (y,m) => new Date(y, m+1, 0).getDate();
+
+function x(date){
+  const mi = (date.getFullYear()-START_Y)*12 + date.getMonth() - START_M;
+  const f = (date.getDate()-1) / dim(date.getFullYear(), date.getMonth());
+  return (mi + f) * MW();
+}
+function status(ev){
+  if (d(ev.e) < NOW) return "past";
+  if (d(ev.s) > NOW) return "upcoming";
+  return "live";
+}
+function fmt(iso){
+  const dt = d(iso);
+  return dt.getDate() + " " + T[lang].months[dt.getMonth()] + " " + dt.getFullYear();
+}
+function daysTo(iso){ return Math.round((d(iso) - NOW) / 86400000); }
+function openDeadlines(){ return EV.filter(e => e.dl && daysTo(e.dl) >= 0).length; }
+
+/* ============ render ============ */
+function chrome(){
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("lede").innerHTML = t.lede;
+  document.getElementById("l-cats").textContent = t.cats;
+  document.getElementById("footer").innerHTML = t.footer;
+  document.getElementById("btn-el").setAttribute("aria-pressed", lang==="el");
+  document.getElementById("btn-en").setAttribute("aria-pressed", lang==="en");
+
+  const pb = document.getElementById("pastBtn");
+  pb.textContent = showPast ? t.pastOn : t.past;
+  pb.setAttribute("aria-pressed", showPast);
+
+  const cats = document.getElementById("cats");
+  cats.querySelectorAll(".chip").forEach(n => n.remove());
+  CATS.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "chip c-" + c;
+    b.setAttribute("aria-pressed", on.has(c));
+    b.innerHTML = `<i class="swatch"></i><span class="txt">${t.types[c]}</span>`;
+    b.onclick = () => { on.has(c) ? on.delete(c) : on.add(c); chrome(); draw(); };
+    cats.appendChild(b);
+  });
+
+  const cls = ["green","live","fired","cone","now"];
+  document.getElementById("legend").innerHTML = t.lg
+    .map((s,i) => `<div><i class="lg ${cls[i]}"></i>${s}</div>`).join("");
+
+  detail();
+}
+
+function months(){
+  const t = T[lang], el = document.getElementById("months");
+  el.innerHTML = "";
+  for (let i = 0; i < N_MONTHS; i++){
+    const m = (START_M + i) % 12, y = START_Y + Math.floor((START_M + i)/12);
+    const div = document.createElement("div");
+    div.className = "mo" + (m===0 ? " jan" : "");
+    div.innerHTML = (m===0 || i===0 ? `<span class="yr">${y}</span>` : "") + t.months[m];
+    el.appendChild(div);
+  }
+}
+
+function draw(){
+  const t = T[lang], rows = document.getElementById("rows");
+  rows.innerHTML = "";
+  const list = EV.filter(e => on.has(e.c) && (showPast || status(e) !== "past"));
+
+  list.forEach(ev => {
+    const st = status(ev);
+    const row = document.createElement("div");
+    row.className = "row" + (sel === ev ? " sel" : "");
+
+    const lab = document.createElement("div");
+    lab.className = "label";
+    lab.innerHTML =
+      `<span class="t">${ev.co==="GR" ? `<i class="gr-dot" title="${t.dot}"></i>` : ""}` +
+        `<a href="${ev.u}" target="_blank" rel="noopener" title="${ev.t} — ${t.link}">` +
+          `${ev.t}<span class="out" aria-hidden="true">↗</span></a></span>` +
+      `<span class="m">${t.types[ev.c]} · ${ev.city}, ${CO[ev.co][lang==="el"?1:0]}</span>`;
+    lab.querySelector("a").onclick = e => e.stopPropagation();
+    lab.onclick = () => { sel = ev; draw(); detail(); };
+    row.appendChild(lab);
+
+    const tr = document.createElement("div");
+    tr.className = "track";
+    for (let i = 0; i < N_MONTHS; i++){
+      const g = document.createElement("i");
+      g.className = "gl" + ((START_M+i)%12===0 ? " jan" : "");
+      g.style.left = (i * MW()) + "px";
+      tr.appendChild(g);
+    }
+
+    const b = document.createElement("button");
+    b.className = `bar b-${ev.c} ${st}` + (ev.approx ? " approx" : "");
+    const L = x(d(ev.s)), R = x(d(ev.e));
+    b.style.left = L + "px";
+    b.style.width = Math.max(R - L, 5) + "px";
+    b.setAttribute("aria-label", `${ev.t}. ${fmt(ev.s)} – ${fmt(ev.e)}. ${t.st[st]}`);
+    b.onclick = () => { sel = ev; draw(); detail(); };
+    tr.appendChild(b);
+
+    if (ev.dl){
+      const c = document.createElement("i");
+      c.className = "cone" + (daysTo(ev.dl) < 0 ? " done" : "");
+      c.style.left = x(d(ev.dl)) + "px";
+      c.title = t.k.dl + ": " + fmt(ev.dl);
+      tr.appendChild(c);
+    }
+
+    row.appendChild(tr);
+    rows.appendChild(row);
+  });
+
+  const nowline = document.createElement("i");
+  nowline.className = "now";
+  nowline.style.left = `calc(var(--label-w) + ${x(NOW)}px)`;
+  nowline.dataset.l = t.now;
+  rows.appendChild(nowline);
+
+  document.getElementById("count").textContent = t.count
+    .replace("{n}", list.length).replace("{tot}", EV.length).replace("{d}", openDeadlines());
+}
+
+function detail(){
+  const t = T[lang], box = document.getElementById("detail");
+  if (!sel){ box.innerHTML = `<p class="hint">${t.hint}</p>`; return; }
+  const st = status(sel);
+  let dl = "";
+  if (sel.dl){
+    const n = daysTo(sel.dl);
+    const note = n < 0 ? t.dlPassed : (n === 0 ? t.dlToday : t.dlIn.replace("{n}", n));
+    dl = `<div><dt>${t.k.dl}</dt><dd class="${n>=0?'dl':''}">${fmt(sel.dl)} <span style="opacity:.6">(${note})</span></dd></div>`;
+  }
+  box.innerHTML = `
+    <span class="tag b-${sel.c}" style="color:var(--${
+      {competition:'celadon',biennale:'kilnblue',fair:'straw',festival:'manganese',conference:'graphite'}[sel.c]
+    })">${t.types[sel.c]}</span>
+    <h2 style="margin-top:10px">${sel.t}</h2>
+    <dl class="kv">
+      <div><dt>${t.k.dates}</dt><dd>${fmt(sel.s)} – ${fmt(sel.e)}${sel.approx?` <span style="opacity:.6">(${t.approx})</span>`:""}</dd></div>
+      <div><dt>${t.k.place}</dt><dd>${sel.city}, ${CO[sel.co][lang==="el"?1:0]}</dd></div>
+      <div><dt>${t.k.status}</dt><dd>${t.st[st]}</dd></div>
+      ${dl}
+    </dl>
+    <a class="link" href="${sel.u}" target="_blank" rel="noopener">${t.link}</a>`;
+}
+
+function setLang(l){ lang = l; chrome(); months(); draw(); }
+
+document.getElementById("btn-el").onclick = () => setLang("el");
+document.getElementById("btn-en").onclick = () => setLang("en");
+document.getElementById("pastBtn").onclick = () => { showPast = !showPast; chrome(); draw(); };
+
+chrome(); months(); draw();
+
+/* centre the view on today */
+const sc = document.getElementById("scroller");
+sc.scrollLeft = Math.max(0, x(NOW) - sc.clientWidth * 0.35);
+window.addEventListener("resize", () => { months(); draw(); });
+</script>
+</body>
+</html>
