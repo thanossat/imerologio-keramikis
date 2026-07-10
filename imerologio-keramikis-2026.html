@@ -264,59 +264,10 @@ footer a{color:var(--ink-soft)}
 </div>
 
 <script>
-/* ============ data (from ceramicsnow.org calendar2025 + calendar2026) ============ */
-const CO = {
-  LV:["Latvia","Λετονία"], PT:["Portugal","Πορτογαλία"], ES:["Spain","Ισπανία"],
-  JP:["Japan","Ιαπωνία"], SI:["Slovenia","Σλοβενία"], GR:["Greece","Ελλάδα"],
-  FR:["France","Γαλλία"], CN:["China","Κίνα"], IT:["Italy","Ιταλία"],
-  TW:["Taiwan","Ταϊβάν"], DE:["Germany","Γερμανία"], AT:["Austria","Αυστρία"],
-  CH:["Switzerland","Ελβετία"], KR:["South Korea","Νότια Κορέα"], BE:["Belgium","Βέλγιο"],
-  US:["USA","ΗΠΑ"], AU:["Australia","Αυστραλία"], UK:["UK","Ην. Βασίλειο"],
-  SG:["Singapore","Σιγκαπούρη"], IN:["India","Ινδία"]
-};
-
-const EV = [
-  {t:"Esplugues Angelina Alós International Ceramic Biennial", c:"competition", s:"2025-07-14", e:"2026-01-11", city:"Esplugues de Llobregat", co:"ES", u:"https://museus.esplugues.cat/en/biennial"},
-  {t:"Latvia Ceramics Biennale — Martinsons Award", c:"competition", s:"2025-09-05", e:"2026-02-01", city:"Daugavpils", co:"LV", u:"https://rothkomuseum.com/en/for-artists/biennaleeng/"},
-  {t:"XVII Biennale of Artistic Ceramics of Aveiro", c:"competition", s:"2025-10-18", e:"2026-01-18", city:"Aveiro", co:"PT", u:"https://bienalceramicaaveiro.pt/"},
-  {t:"The 11th Kikuchi Biennale", c:"competition", s:"2025-12-13", e:"2026-03-22", city:"Tomo Museum, Tokyo", co:"JP", u:"https://biennale.musee-tomo.or.jp/en/"},
-
-  {t:"ceramic brussels 2026", c:"fair", s:"2026-01-21", e:"2026-01-25", city:"Brussels", co:"BE", u:"https://ceramic.brussels/en/"},
-  {t:"6th Siegburg International Ceramics Award", c:"competition", s:"2026-02-01", e:"2026-04-12", city:"Siegburg", co:"DE", u:"https://tourismus-siegburg.de/keramik-in-siegburg/keramikpreis/"},
-  {t:"NCECA 2026 — Volumes", c:"conference", s:"2026-03-25", e:"2026-03-28", city:"Detroit, Michigan", co:"US", u:"https://nceca.net/"},
-  {t:"Clay Gulgong 2026", c:"festival", s:"2026-04-11", e:"2026-04-17", city:"Gulgong, NSW", co:"AU", u:"https://www.mansfieldceramics.com/clay-gulgong/about/"},
-  {t:"CCACA 2026", c:"conference", s:"2026-04-24", e:"2026-04-25", city:"Davis, California", co:"US", u:"https://natsoulas.com/about"},
-  {t:"XVII International Ceramic Biennial of Manises", c:"competition", s:"2026-05-08", e:"2026-07-31", city:"Manises", co:"ES", u:"https://www.museumanises.es/va/page/xvii-biennal-internacional-ceramica-manises"},
-  {t:"Ceramic Art London 2026", c:"fair", s:"2026-05-08", e:"2026-05-10", city:"London", co:"UK", u:"https://www.ceramicartlondon.com/"},
-  {t:"LOEWE Craft Prize 2026", c:"competition", s:"2026-05-13", e:"2026-06-14", city:"National Gallery", co:"SG", u:"https://craftprize.loewe.com/en/craftprize2026"},
-  {t:"Diessener Töpfermarkt Young Ceramics Award", c:"competition", s:"2026-05-14", e:"2026-05-17", city:"Dießen am Ammersee", co:"DE", u:"https://www.diessener-toepfermarkt.de/foerderpreis/"},
-  {t:"6th International Ceramics Triennial UNICUM 2026", c:"competition", s:"2026-05-15", e:"2026-10-15", city:"Ljubljana", co:"SI", u:"https://www.nms.si/en/events/2025/12/01/12107-Call-for-applications-to-participate-in-the-exhibition-of-artistic-ceramics-UNICUM-2026"},
-  {t:"43rd Concurs Internacional de Ceràmica de l'Alcora", c:"competition", s:"2026-05-16", e:"2026-09-06", city:"L'Alcora", co:"ES", u:"https://www.mundoarti.com/concursos/CTO4679/concurso-internacional-de-cermica-de-l-alcora-cica-2026/"},
-  {t:"Ceramic Market Andenne — Li Dièle 2026", c:"fair", s:"2026-05-24", e:"2026-05-25", city:"Andenne", co:"BE", u:"https://ceramicartandenne.be/markets/li-diele-2026/"},
-  {t:"cerARTmic Madrid 2026", c:"fair", s:"2026-06-04", e:"2026-06-07", city:"Madrid", co:"ES", u:"https://www.cerartmic.com/"},
-  {t:"Höhr-Grenzhausen Ceramics Market 2026", c:"fair", s:"2026-06-06", e:"2026-06-07", city:"Höhr-Grenzhausen", co:"DE", u:"https://www.kannenbaeckerland.de/keramik/keramikmuseum/maerkte/keramikmarkt/"},
-  {t:"Marché Céramique Contemporaine Giroussens", c:"fair", s:"2026-06-06", e:"2026-06-07", city:"Giroussens", co:"FR", u:"https://www.terre-et-terres.com/marche-giroussens/marche-ceramique-contemporaine-giroussens-6-et-7-juin-2026/"},
-  {t:"Biennale of Contemporary Keramics 2026", c:"biennale", s:"2026-06-07", e:"2026-10-31", approx:true, city:"Rhodes", co:"GR", u:"https://bigbluedot.art/bck-2026/"},
-  {t:"Saint-Sulpice Céramique 2026", c:"fair", s:"2026-06-25", e:"2026-06-28", city:"Place Saint Sulpice, Paris", co:"FR", u:"https://saintsulpiceceramique.com/en/home/"},
-  {t:"Jingdezhen International Ceramic Art Biennale", c:"competition", s:"2026-06-26", e:"2027-03-31", city:"Jingdezhen", co:"CN", u:"http://www.cjicb.com/index_en.html"},
-  {t:"IAC 52nd Congress", c:"conference", s:"2026-06-27", e:"2026-07-02", city:"Jingdezhen", co:"CN", u:"https://jingdezhen2026.aic-iac.org/"},
-  {t:"33rd Mediterraneo Ceramics Competition", c:"competition", s:"2026-07-04", e:"2026-10-18", city:"Grottaglie", co:"IT", u:"https://comune.grottaglie.ta.it/it/news/disciplinare-xxxiii-concorso-di-ceramica-contemporanea-mediterraneo-grottaglie-4-luglio-18-ottobre-2026"},
-  {t:"Terralha 2026 — European Ceramic Festival", c:"festival", s:"2026-07-12", e:"2026-07-14", city:"Saint-Quentin-la-Poterie", co:"FR", u:"https://capitale-ceramique.com/terralha-festival-ceramique/"},
-  {t:"2026 Taiwan Ceramics Biennale", c:"biennale", s:"2026-07-31", e:"2026-12-27", city:"Yingge Ceramics Museum", co:"TW", u:"https://en.ceramics.ntpc.gov.tw/"},
-  {t:"International Ceramics Days Oldenburg 2026", c:"fair", s:"2026-08-01", e:"2026-08-02", city:"Oldenburg", co:"DE", u:"https://en.keramiktage.com/"},
-  {t:"Austrian Pottery Market 2026", c:"fair", s:"2026-08-28", e:"2026-08-30", city:"Gmunden", co:"AT", u:"https://www.gmunden.at/kultur-freizeit-tourismus/toepfermarkt/bewerbung-application/"},
-  {t:"6th Officine Saffi Award", c:"competition", s:"2026-09-01", e:"2026-09-30", approx:true, dl:"2026-06-26", city:"Fondazione Officine Saffi, Milan", co:"IT", u:"https://officinesaffi.org/en/award/award"},
-  {t:"Argillà Italia 2026", c:"fair", s:"2026-09-04", e:"2026-09-06", city:"Faenza", co:"IT", u:"https://www.argilla-italia.it/en/"},
-  {t:"Carouge International Ceramics Competition", c:"competition", s:"2026-09-19", e:"2026-11-29", city:"Carouge, Geneva", co:"CH", u:"https://www.carouge.ch/cic"},
-  {t:"C14 Paris 2026", c:"fair", s:"2026-10-01", e:"2026-10-04", city:"Paris", co:"FR", u:"https://c14paris.com/en/"},
-  {t:"Gyeonggi Ceramics Biennale 2026", c:"competition", s:"2026-10-01", e:"2026-10-31", approx:true, city:"Gyeonggi Province", co:"KR", u:"https://www.gmocca.org/eng/biennale"},
-  {t:"XIV Ceramics Biennial of El Vendrell", c:"competition", s:"2026-11-13", e:"2027-01-16", dl:"2026-08-02", city:"El Vendrell, Catalonia", co:"ES", u:"https://www.elvendrell.net/art/ceramica/biennal-de-ceramica"},
-  {t:"14th Shiwan Cup Youth Ceramic Sculpture Competition", c:"competition", s:"2026-12-01", e:"2026-12-31", approx:true, dl:"2026-08-31", city:"Foshan, Guangdong", co:"CN", u:"https://www.swcm.org.cn/#/info/detail?Id=1060&menuId=16&language=English"},
-
-  {t:"ceramic brussels 2027", c:"fair", s:"2027-01-20", e:"2027-01-24", city:"Brussels", co:"BE", u:"https://ceramic.brussels/en/"},
-  {t:"14th International Ceramics Festival MINO", c:"competition", s:"2027-10-08", e:"2027-11-07", dl:"2027-01-29", city:"Tajimi, Gifu", co:"JP", u:"https://www.icfmino.com/en/iccm-en"},
-  {t:"Indian Ceramics Triennale 2027", c:"biennale", s:"2027-11-05", e:"2027-12-23", city:"NGMA, Mumbai", co:"IN", u:"https://www.indianceramicstriennale.com/ict2027"}
-];
+/* ============ data (loaded from data.json) ============ */
+let CO = {};
+let EV = [];
+let META = {};
 
 /* ============ i18n ============ */
 const T = {
@@ -328,7 +279,11 @@ const T = {
     types:{competition:"Διαγωνισμός",biennale:"Μπιενάλε",fair:"Φουάρ",festival:"Φεστιβάλ",conference:"Συνέδριο"},
     lg:["Άψητο — δεν ξεκίνησε","Στη φωτιά — σε εξέλιξη","Ψημένο — ολοκληρώθηκε","Προθεσμία αίτησης","Σήμερα"],
     hint:"Διάλεξε μια μπάρα για λεπτομέρειες.",
-    k:{dates:"Ημερομηνίες",place:"Τόπος",type:"Είδος",dl:"Προθεσμία αίτησης",status:"Κατάσταση"},
+    k:{dates:"Ημερομηνίες",place:"Τόπος",type:"Είδος",dl:"Προθεσμία αίτησης",status:"Κατάσταση",note:"Σημείωση"},
+    nolink:"Δεν έχει καταγραφεί σύνδεσμος για αυτή τη διοργάνωση.",
+    checked:"Τελευταίος έλεγχος δεδομένων: {d}",
+    loading:"Φόρτωση δεδομένων…",
+    error:"Δεν φόρτωσε το data.json. Αν άνοιξες το αρχείο τοπικά με διπλό κλικ, ο browser μπλοκάρει το fetch — τρέξε <code>python3 -m http.server</code> στον φάκελο, ή δες τη σελίδα από το GitHub Pages.",
     st:{upcoming:"Δεν έχει ξεκινήσει",live:"Σε εξέλιξη",past:"Ολοκληρώθηκε"},
     dlPassed:"πέρασε", dlIn:"σε {n} μέρες", dlToday:"σήμερα",
     link:"Επίσκεψη ιστοσελίδας →",
@@ -346,7 +301,11 @@ const T = {
     types:{competition:"Competition",biennale:"Biennale",fair:"Fair",festival:"Festival",conference:"Conference"},
     lg:["Greenware — not started","In the kiln — running now","Fired — finished","Application deadline","Today"],
     hint:"Select a bar for details.",
-    k:{dates:"Dates",place:"Place",type:"Type",dl:"Application deadline",status:"Status"},
+    k:{dates:"Dates",place:"Place",type:"Type",dl:"Application deadline",status:"Status",note:"Note"},
+    nolink:"No website recorded for this event.",
+    checked:"Data last checked: {d}",
+    loading:"Loading data…",
+    error:"Could not load data.json. If you opened this file directly, the browser blocks fetch — run <code>python3 -m http.server</code> in the folder, or view it via GitHub Pages.",
     st:{upcoming:"Not started",live:"Running now",past:"Finished"},
     dlPassed:"passed", dlIn:"in {n} days", dlToday:"today",
     link:"Visit website →",
@@ -379,8 +338,8 @@ function x(date){
   return (mi + f) * MW();
 }
 function status(ev){
-  if (d(ev.e) < NOW) return "past";
-  if (d(ev.s) > NOW) return "upcoming";
+  if (d(ev.end) < NOW) return "past";
+  if (d(ev.start) > NOW) return "upcoming";
   return "live";
 }
 function fmt(iso){
@@ -388,7 +347,7 @@ function fmt(iso){
   return dt.getDate() + " " + T[lang].months[dt.getMonth()] + " " + dt.getFullYear();
 }
 function daysTo(iso){ return Math.round((d(iso) - NOW) / 86400000); }
-function openDeadlines(){ return EV.filter(e => e.dl && daysTo(e.dl) >= 0).length; }
+function openDeadlines(){ return EV.filter(e => e.deadline && daysTo(e.deadline) >= 0).length; }
 
 /* ============ render ============ */
 function chrome(){
@@ -397,7 +356,7 @@ function chrome(){
   document.getElementById("title").textContent = t.title;
   document.getElementById("lede").innerHTML = t.lede;
   document.getElementById("l-cats").textContent = t.cats;
-  document.getElementById("footer").innerHTML = t.footer;
+  document.getElementById("footer").innerHTML = t.footer + (META.last_checked ? `<br><br>${t.checked.replace("{d}", META.last_checked)}` : "");
   document.getElementById("btn-el").setAttribute("aria-pressed", lang==="el");
   document.getElementById("btn-en").setAttribute("aria-pressed", lang==="en");
 
@@ -438,7 +397,7 @@ function months(){
 function draw(){
   const t = T[lang], rows = document.getElementById("rows");
   rows.innerHTML = "";
-  const list = EV.filter(e => on.has(e.c) && (showPast || status(e) !== "past"));
+  const list = EV.filter(e => on.has(e.category) && (showPast || status(e) !== "past"));
 
   list.forEach(ev => {
     const st = status(ev);
@@ -447,12 +406,14 @@ function draw(){
 
     const lab = document.createElement("div");
     lab.className = "label";
+    const dot = ev.country==="GR" ? `<i class="gr-dot" title="${t.dot}"></i>` : "";
+    const name = ev.url
+      ? `<a href="${ev.url}" target="_blank" rel="noopener" title="${ev.title} — ${t.link}">${ev.title}<span class="out" aria-hidden="true">↗</span></a>`
+      : `<span title="${t.nolink}">${ev.title}</span>`;
     lab.innerHTML =
-      `<span class="t">${ev.co==="GR" ? `<i class="gr-dot" title="${t.dot}"></i>` : ""}` +
-        `<a href="${ev.u}" target="_blank" rel="noopener" title="${ev.t} — ${t.link}">` +
-          `${ev.t}<span class="out" aria-hidden="true">↗</span></a></span>` +
-      `<span class="m">${t.types[ev.c]} · ${ev.city}, ${CO[ev.co][lang==="el"?1:0]}</span>`;
-    lab.querySelector("a").onclick = e => e.stopPropagation();
+      `<span class="t">${dot}${name}</span>` +
+      `<span class="m">${t.types[ev.category]} · ${ev.city}, ${CO[ev.country][lang==="el"?1:0]}</span>`;
+    const a = lab.querySelector("a"); if (a) a.onclick = e => e.stopPropagation();
     lab.onclick = () => { sel = ev; draw(); detail(); };
     row.appendChild(lab);
 
@@ -466,19 +427,19 @@ function draw(){
     }
 
     const b = document.createElement("button");
-    b.className = `bar b-${ev.c} ${st}` + (ev.approx ? " approx" : "");
-    const L = x(d(ev.s)), R = x(d(ev.e));
+    b.className = `bar b-${ev.category} ${st}` + (ev.approx_end ? " approx" : "");
+    const L = x(d(ev.start)), R = x(d(ev.end));
     b.style.left = L + "px";
     b.style.width = Math.max(R - L, 5) + "px";
-    b.setAttribute("aria-label", `${ev.t}. ${fmt(ev.s)} – ${fmt(ev.e)}. ${t.st[st]}`);
+    b.setAttribute("aria-label", `${ev.title}. ${fmt(ev.start)} – ${fmt(ev.end)}. ${t.st[st]}`);
     b.onclick = () => { sel = ev; draw(); detail(); };
     tr.appendChild(b);
 
-    if (ev.dl){
+    if (ev.deadline){
       const c = document.createElement("i");
-      c.className = "cone" + (daysTo(ev.dl) < 0 ? " done" : "");
-      c.style.left = x(d(ev.dl)) + "px";
-      c.title = t.k.dl + ": " + fmt(ev.dl);
+      c.className = "cone" + (daysTo(ev.deadline) < 0 ? " done" : "");
+      c.style.left = x(d(ev.deadline)) + "px";
+      c.title = t.k.dl + ": " + fmt(ev.deadline);
       tr.appendChild(c);
     }
 
@@ -501,23 +462,26 @@ function detail(){
   if (!sel){ box.innerHTML = `<p class="hint">${t.hint}</p>`; return; }
   const st = status(sel);
   let dl = "";
-  if (sel.dl){
-    const n = daysTo(sel.dl);
+  if (sel.deadline){
+    const n = daysTo(sel.deadline);
     const note = n < 0 ? t.dlPassed : (n === 0 ? t.dlToday : t.dlIn.replace("{n}", n));
-    dl = `<div><dt>${t.k.dl}</dt><dd class="${n>=0?'dl':''}">${fmt(sel.dl)} <span style="opacity:.6">(${note})</span></dd></div>`;
+    dl = `<div><dt>${t.k.dl}</dt><dd class="${n>=0?'dl':''}">${fmt(sel.deadline)} <span style="opacity:.6">(${note})</span></dd></div>`;
   }
+  const note = sel.note ? `<div><dt>${t.k.note}</dt><dd>${sel.note[lang]}</dd></div>` : "";
+  const hue = {competition:'celadon',biennale:'kilnblue',fair:'straw',festival:'manganese',conference:'graphite'}[sel.category];
+  const link = sel.url
+    ? `<a class="link" href="${sel.url}" target="_blank" rel="noopener">${t.link}</a>`
+    : `<p class="hint" style="margin-top:16px">${t.nolink}</p>`;
   box.innerHTML = `
-    <span class="tag b-${sel.c}" style="color:var(--${
-      {competition:'celadon',biennale:'kilnblue',fair:'straw',festival:'manganese',conference:'graphite'}[sel.c]
-    })">${t.types[sel.c]}</span>
-    <h2 style="margin-top:10px">${sel.t}</h2>
+    <span class="tag" style="color:var(--${hue})">${t.types[sel.category]}</span>
+    <h2 style="margin-top:10px">${sel.title}</h2>
     <dl class="kv">
-      <div><dt>${t.k.dates}</dt><dd>${fmt(sel.s)} – ${fmt(sel.e)}${sel.approx?` <span style="opacity:.6">(${t.approx})</span>`:""}</dd></div>
-      <div><dt>${t.k.place}</dt><dd>${sel.city}, ${CO[sel.co][lang==="el"?1:0]}</dd></div>
+      <div><dt>${t.k.dates}</dt><dd>${fmt(sel.start)} – ${fmt(sel.end)}${sel.approx_end?` <span style="opacity:.6">(${t.approx})</span>`:""}</dd></div>
+      <div><dt>${t.k.place}</dt><dd>${sel.city}, ${CO[sel.country][lang==="el"?1:0]}</dd></div>
       <div><dt>${t.k.status}</dt><dd>${t.st[st]}</dd></div>
-      ${dl}
+      ${dl}${note}
     </dl>
-    <a class="link" href="${sel.u}" target="_blank" rel="noopener">${t.link}</a>`;
+    ${link}`;
 }
 
 function setLang(l){ lang = l; chrome(); months(); draw(); }
@@ -526,12 +490,28 @@ document.getElementById("btn-el").onclick = () => setLang("el");
 document.getElementById("btn-en").onclick = () => setLang("en");
 document.getElementById("pastBtn").onclick = () => { showPast = !showPast; chrome(); draw(); };
 
-chrome(); months(); draw();
+async function boot(){
+  const box = document.getElementById("detail");
+  box.innerHTML = `<p class="hint">${T[lang].loading}</p>`;
+  try {
+    const r = await fetch("data.json", {cache:"no-store"});
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    CO = j.countries; EV = j.events; META = j;
+  } catch (err) {
+    console.error(err);
+    document.getElementById("scroller").style.display = "none";
+    box.innerHTML = `<p class="hint">${T[lang].error}</p>`;
+    return;
+  }
+  EV.sort((a,b) => a.start.localeCompare(b.start) || a.title.localeCompare(b.title));
+  chrome(); months(); draw();
 
-/* centre the view on today */
-const sc = document.getElementById("scroller");
-sc.scrollLeft = Math.max(0, x(NOW) - sc.clientWidth * 0.35);
-window.addEventListener("resize", () => { months(); draw(); });
+  const sc = document.getElementById("scroller");
+  sc.scrollLeft = Math.max(0, x(NOW) - sc.clientWidth * 0.35);
+  window.addEventListener("resize", () => { months(); draw(); });
+}
+boot();
 </script>
 </body>
 </html>
