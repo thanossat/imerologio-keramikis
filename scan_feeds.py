@@ -25,12 +25,17 @@ import sys
 import unicodedata
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from email.utils import parsedate_to_datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 UA = "Mozilla/5.0 (X11; Linux aarch64) Gecko/20100101 Firefox/128.0"
 TIMEOUT = 25
 REJECTED_WINDOW = 150
+
+# Χρονικό παράθυρο: τρέχον έτος + επόμενο. Ό,τι παλαιότερο πάει κατευθείαν στο seen.
+MAX_AGE_DAYS = 400
+THIS_YEAR = datetime.now().year
 
 # Τον πρώτο μήνα τα αρνητικά ΔΕΝ σβήνουν οριστικά: πάνε στο rejected.json
 # ώστε να ελέγξεις ότι κόβουν σωστά. Γύρισέ το σε True όταν τα εμπιστευτείς.
@@ -57,6 +62,11 @@ def strip_accents(s: str) -> str:
 
 def norm(s: str) -> str:
     return strip_accents((s or "").lower())
+
+
+def despace(s: str) -> str:
+    """«Δ Ε Λ Τ Ι Ο  Τ Υ Π Ο Υ» → «δελτιοτυπου». Νικάει τα αραιωμένα κεφαλαία."""
+    return re.sub(r"\s+", "", norm(s))
 
 
 TAG = re.compile(r"<[^>]+>")
@@ -103,11 +113,12 @@ def parse_item(el, source):
     title = text_of(t) if t is not None else ""
     title = re.sub(r"^\[[^\]]{1,12}\]\s*", "", title)   # On the Move: «[News] …»
 
-    body = ""
+    body = raw = ""
     for tag in ("description", "content", "summary", "encoded"):
         c = child(el, tag)
         if c is not None and (c.text or len(c)):
-            body = untag(text_of(c))
+            raw = html.unescape(text_of(c))   # HTML ακέραιο: κρατά τα datetime="…"
+            body = untag(text_of(c))          # καθαρό κείμενο: για ανάγνωση
             break
 
     link = ""
@@ -115,11 +126,19 @@ def parse_item(el, source):
     if l is not None:
         link = (l.text or l.get("href") or "").strip()
 
-    d = child(el, "pubDate") or child(el, "published") or child(el, "updated")
-    pub = (d.text or "").strip() if d is not None else ""
+    d = None
+    for tag in ("pubDate", "published", "updated"):
+        d = child(el, tag)
+        if d is not None:          # ΠΟΤΕ σκέτο `or`: Element χωρίς παιδιά είναι falsy
+            break
+    pub = (d.text if d is not None and d.text else "").strip()
+
+    # Μερικές αναρτήσεις της ΠΕΚΑ δεν έχουν καθόλου τίτλο.
+    if not title and body:
+        title = body[:70].rstrip() + "…"
 
     return {"source": source, "title": title, "link": link,
-            "published": pub, "body": body[:4000]}
+            "published": pub, "body": body[:4000], "raw": raw[:6000]}
 
 
 # ---------------------------------------------------------------- προθεσμίες
@@ -138,6 +157,31 @@ def find_deadline(raw_body: str, clean_body: str):
     return None, None
 
 
+# ---------------------------------------------------------------- ηλικία
+
+YEAR = re.compile(r"\b(20\d{2})\b")
+
+
+def too_old(item) -> str:
+    """Επιστρέφει λόγο αν είναι παρελθόν, αλλιώς "". Δύο ανεξάρτητα μανταλάκια."""
+    if item["published"]:
+        try:
+            d = parsedate_to_datetime(item["published"])
+            if d.tzinfo is None:
+                d = d.replace(tzinfo=timezone.utc)
+            age = (datetime.now(timezone.utc) - d).days
+            if age > MAX_AGE_DAYS:
+                return f"δημοσιεύτηκε πριν {age} μέρες"
+        except Exception:
+            pass
+
+    # Έτος ΜΟΝΟ από τον τίτλο. Στο σώμα υπάρχουν αρχεία παλιών ετών.
+    years = [int(y) for y in YEAR.findall(item["title"])]
+    if years and max(years) < THIS_YEAR:
+        return f"τίτλος αναφέρει μόνο {max(years)}"
+    return ""
+
+
 # ---------------------------------------------------------------- φίλτρο
 
 def hits(text: str, terms) -> list:
@@ -145,8 +189,9 @@ def hits(text: str, terms) -> list:
 
 
 def classify(item, kw):
-    """Τρία καλάθια. Επιστρέφει (bucket, reason, matches)."""
+    """Καλάθια: pass / reject / noise / old. Επιστρέφει (bucket, reason, matches)."""
     t = norm(item["title"])
+    t_ds = despace(item["title"])
     full = norm(item["title"] + " " + item["body"])
 
     # 1. Σκληρά αρνητικά — βιομηχανική/επιστημονική κεραμική. Σε ΟΛΟ το κείμενο.
@@ -154,22 +199,32 @@ def classify(item, kw):
     if bad:
         return "noise", f"σκληρό αρνητικό: {bad[0]}", {}
 
-    # 2. Συντακτικά αρνητικά — ΜΟΝΟ στον τίτλο. Στο σώμα θα έκοβαν αθώα.
-    bad = hits(t, kw["negative_title"])
+    # 2. Συντακτικά αρνητικά — ΜΟΝΟ στον τίτλο, και στην αραιωμένη εκδοχή του.
+    bad = [x for x in kw["negative_title"] if norm(x) in t or despace(x) in t_ds]
     if bad:
         return "noise", f"αρνητικό στον τίτλο: {bad[0]}", {}
 
+    # 3. Υλικό: οπουδήποτε.
     mat = hits(full, kw["material"])
-    opp = hits(full, kw["opportunity"])
-
-    if not mat and not opp:
-        return "reject", "ούτε υλικό ούτε ευκαιρία", {}
     if not mat:
-        return "reject", "λείπει όρος υλικού", {"opportunity": opp[:4]}
-    if not opp:
-        return "reject", "λείπει όρος ευκαιρίας", {"material": mat[:4]}
+        return "reject", "λείπει όρος υλικού", {}
 
-    return "pass", "", {"material": mat[:4], "opportunity": opp[:4]}
+    # 4. Ευκαιρία ή εκδήλωση: ΣΤΟΝ ΤΙΤΛΟ.
+    opp = hits(t, kw["opportunity"])
+    evt = hits(t, kw["event"])
+
+    # Εξαίρεση: το Ceramics Now κρύβει τις προθεσμίες στο σώμα.
+    if not opp and BODY_DEADLINE.search(item["raw"]):
+        opp = ["deadline (στο σώμα)"]
+
+    if not opp and not evt:
+        return "reject", "λείπει όρος ευκαιρίας/εκδήλωσης στον τίτλο", {"material": mat[:4]}
+
+    kind = "open_call" if opp else "event"
+    return "pass", kind, {"material": mat[:4], "opportunity": opp[:4], "event": evt[:4]}
+
+
+BODY_DEADLINE = re.compile(r'deadline\s*:|datetime="\d{4}-', re.I)
 
 
 # ---------------------------------------------------------------- αποθήκευση
@@ -217,7 +272,7 @@ def main():
             tally[src] = "ΣΦΑΛΜΑ"
             continue
 
-        c = {"pass": 0, "reject": 0, "noise": 0, "seen": 0}
+        c = {"pass": 0, "reject": 0, "noise": 0, "old": 0, "seen": 0}
 
         for el in items_of(root):
             item = parse_item(el, src)
@@ -227,15 +282,20 @@ def main():
                 c["seen"] += 1
                 continue
 
+            reason = too_old(item)
+            if reason:
+                c["old"] += 1
+                seen.add(k)          # γεγονός, όχι κρίση — δεν χρειάζεται επιθεώρηση
+                continue
+
             bucket, reason, matches = classify(item, kw)
             c[bucket] += 1
 
             if bucket == "pass":
-                raw = ET.tostring(el, encoding="unicode")
-                dl, dl_kind = find_deadline(raw, item["body"])
+                dl, dl_kind = find_deadline(item["raw"], item["body"])
                 flags = hits(norm(item["body"]), kw["eligibility_flags"])
                 inbox.append({
-                    "status": "pending", "found": now,
+                    "status": "pending", "kind": reason, "found": now,
                     "source": src, "title": item["title"], "link": item["link"],
                     "published": item["published"],
                     "deadline": dl, "deadline_kind": dl_kind,
@@ -257,14 +317,13 @@ def main():
         tally[src] = c
 
     # --- σύνοψη
-    print(f"\n{'πηγή':<10} {'νέα':>5} {'πέρασαν':>9} {'κόπηκαν':>9} {'θόρυβος':>9}")
+    print(f"\n{'πηγή':<10} {'πέρασαν':>8} {'κόπηκαν':>8} {'θόρυβος':>8} {'παλιά':>7}")
     print("-" * 46)
     for src, c in tally.items():
         if c == "ΣΦΑΛΜΑ":
-            print(f"{src:<10} {'—':>5} {'—':>9} {'—':>9} {'ΣΦΑΛΜΑ':>9}")
+            print(f"{src:<10} {'ΣΦΑΛΜΑ':>8}")
             continue
-        new = c["pass"] + c["reject"] + c["noise"]
-        print(f"{src:<10} {new:>5} {c['pass']:>9} {c['reject']:>9} {c['noise']:>9}")
+        print(f"{src:<10} {c['pass']:>8} {c['reject']:>8} {c['noise']:>8} {c['old']:>7}")
 
     pend = [i for i in inbox if i["status"] == "pending"]
     print(f"\ninbox: {len(pend)} σε αναμονή   rejected: {len(rejected)}   seen: {len(seen)}")

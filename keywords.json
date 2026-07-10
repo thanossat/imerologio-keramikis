@@ -1,50 +1,63 @@
 {
-  "_σημείωση": "Όλα συγκρίνονται σε πεζά και ΧΩΡΙΣ τόνους. Γράψε τα εδώ όπως θες· το script τα κανονικοποιεί. Οι ελληνικές λέξεις είναι ΡΙΖΕΣ (χωρίς κατάληξη) ώστε να πιάνουν όλες τις πτώσεις.",
+  "_σημείωση": "Πεζά, χωρίς τόνους — το script κανονικοποιεί. Ελληνικά = ΡΙΖΕΣ.",
+
+  "_κανόνας": "ΥΛΙΚΟ οπουδήποτε (τίτλος ή σώμα) ΚΑΙ (ΕΥΚΑΙΡΙΑ ή ΕΚΔΗΛΩΣΗ) ΣΤΟΝ ΤΙΤΛΟ. Εξαίρεση: 'deadline:' ή datetime= στο σώμα μετράει ως ευκαιρία.",
 
   "material": [
     "ceramic", "ceramics", "clay", "porcelain", "stoneware", "earthenware",
-    "terracotta", "pottery", "potter", "kiln", "glaze", "raku", "sculpture", "craft",
-    "keramik", "keramikk", "keramiek", "ceramique", "céramique", "gres", "grès",
-    "ceramica", "cerámica", "cerâmica", "ceràmica", "keramika", "ceramika",
-    "seramik", "kerámia", "kerámiai",
+    "terracotta", "pottery", "potter", "kiln", "glaze", "raku", "craft",
+    "keramik", "keramikk", "keramiek", "toepfer", "töpfer",
+    "ceramique", "céramique", "gres", "grès",
+    "ceramica", "cerámica", "cerâmica", "ceràmica",
+    "keramika", "ceramika", "seramik", "kerámia",
     "κεραμικ", "κεραμει", "κεραμιστ", "πηλ", "αγγειοπλαστ", "πορσελαν"
   ],
 
   "opportunity": [
-    "open call", "opencall", "call for entries", "call for artists",
-    "call for applications", "call for proposals", "call for submissions",
-    "applications are open", "applications open", "applications close",
-    "now accepting", "submissions open", "deadline", "apply by", "entry deadline",
-    "competition", "contest", "prize", "award", "grant", "bursary", "fellowship",
-    "scholarship", "residency", "artist-in-residence", "biennale", "biennial",
-    "triennale", "triennial", "symposium", "juried",
-    "appel a candidatures", "appel à candidatures", "appel a projets",
+    "open call", "opencall", "call for entr", "call for artist",
+    "call for application", "call for proposal", "call for submission",
+    "applications open", "applications close", "now accepting",
+    "submissions open", "deadline", "apply by", "juried",
+    "competition", "contest", "prize", "award", "grant", "bursary",
+    "fellowship", "scholarship", "residency", "artist-in-residence",
+    "appel a candidature", "appel à candidature", "appel a projet",
     "convocatoria", "concurso", "bando", "premio",
-    "ausschreibung", "wettbewerb", "bewerbung",
-    "oproep",
-    "προκηρυξ", "προσκλησ", "διαγωνισμ", "υποβολ", "αιτησ", "υποτροφ",
-    "παρατασ", "εκδηλωση ενδιαφεροντος", "δηλωσεις συμμετοχης", "συμμετοχ",
-    "βραβει", "residency", "καλλιτεχνικη φιλοξενια"
+    "ausschreibung", "wettbewerb", "bewerbung", "oproep",
+    "προκηρυξ", "προσκλησ", "διαγωνισμ", "υποτροφ", "παρατασ",
+    "εκδηλωση ενδιαφεροντος", "δηλωσεις συμμετοχης", "αιτηση ενδιαφεροντος",
+    "διαθεση περιπτερ", "καλλιτεχνικη φιλοξενια"
+  ],
+
+  "_event_σημείωση": "ΜΟΝΟ λέξεις κλίμακας. ΟΧΙ σκέτο 'exhibition'/'Ausstellung'/'έκθεση' — θα έμπαινε κάθε γκαλερί.",
+  "event": [
+    "biennale", "biennial", "triennale", "triennial", "quadrennial",
+    "festival", "symposium", "congress", "forum",
+    "art fair", "ceramics fair", "keramikmarkt", "toepfermarkt", "töpfermarkt",
+    "marche ceramique", "marché céramique", "mercato",
+    "φεστιβαλ", "συμποσιο", "συνεδριο", "φορουμ",
+    "πανελληνια εκθεση", "διεθνησ εκθεση", "αγορα κεραμικησ", "φουαρ"
   ],
 
   "negative_hard": [
     "ceramic coating", "ceramic tile", "ceramic pro", "paint protection",
-    "dental", "crown", "veneer", "brake", "bearing", "capacitor", "substrate",
-    "technical ceramics", "advanced ceramics", "refractory", "silicate",
-    "sanitaryware", "roof tile", "expanded clay", "enamel industry",
+    "dental", "veneer", "brake pad", "bearing", "capacitor",
+    "technical ceramics", "advanced ceramics", "refractory", "silicatkeramik",
+    "sanitaryware", "roof tile", "expanded clay",
     "cerame-unie", "ecers", "cookware", "non-stick"
   ],
 
   "negative_title": [
     "αποτελεσματα", "ευχες", "γενικη συνελευση", "δελτιο τυπου", "εκλογες",
+    "ενημερωση", "διαβουλευση", "ανακοινωση τησ ευρωπαϊκησ",
     "is out now", "has been released", "interview", "exhibition review",
     "studio visit", "in memoriam", "obituary", "job vacancy", "hiring",
-    "internship", "beginners workshop", "pottery class", "webinar", "podcast"
+    "internship", "nachfolge", "flohmarkt", "webinar", "podcast",
+    "kurs", "workshop", "seminar", "σεμιναρ"
   ],
 
   "eligibility_flags": [
-    "us residents", "united states only", "must reside", "members only",
-    "under 35", "under 30", "students only", "eu citizens", "μελη",
-    "mediterranean", "europe-based"
+    "us residents", "united states", "must reside", "members only",
+    "under 35", "under 30", "students only", "eu citizens",
+    "mediterranean", "europe-based", "μελη τησ"
   ]
 }
