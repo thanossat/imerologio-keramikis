@@ -36,6 +36,7 @@ REJECTED_WINDOW = 150
 # Χρονικό παράθυρο: τρέχον έτος + επόμενο. Ό,τι παλαιότερο πάει κατευθείαν στο seen.
 MAX_AGE_DAYS = 400
 THIS_YEAR = datetime.now().year
+TODAY = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 # Τον πρώτο μήνα τα αρνητικά ΔΕΝ σβήνουν οριστικά: πάνε στο rejected.json
 # ώστε να ελέγξεις ότι κόβουν σωστά. Γύρισέ το σε True όταν τα εμπιστευτείς.
@@ -143,17 +144,52 @@ def parse_item(el, source):
 
 # ---------------------------------------------------------------- προθεσμίες
 
-ISO = re.compile(r'datetime="(\d{4}-\d{2}-\d{2})')          # On the Move: μηχανικά αναγνώσιμο
-DEADLINE = re.compile(r"deadline:?\s*([^.<|;]{4,40})", re.I)  # Ceramics Now: μέσα στο κείμενο
+MON = {m: i + 1 for i, m in enumerate(
+    "jan feb mar apr may jun jul aug sep oct nov dec".split())}
+
+ISO_ATTR = re.compile(r'datetime="(\d{4})-(\d{2})-(\d{2})')
+D_ISO = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
+D_MDY = re.compile(r"\b([a-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\b")
+D_DMY = re.compile(r"\b(\d{1,2})(?:st|nd|rd|th)?\.?\s+([a-z]{3,9})\.?,?\s+(\d{4})\b")
+D_NUM = re.compile(r"\b(\d{1,2})[./](\d{1,2})[./](\d{4})\b")
+
+CUE = re.compile(r"deadline|apply by|applications close|submission[s]? close|closes on", re.I)
 
 
-def find_deadline(raw_body: str, clean_body: str):
-    m = ISO.search(raw_body)
+def _mk(y, m, d):
+    try:
+        return datetime(int(y), int(m), int(d)).strftime("%Y-%m-%d")
+    except ValueError:
+        return None
+
+
+def parse_date(window: str):
+    """Ημερομηνία, όχι κείμενο. Επιστρέφει ISO ή None."""
+    w = norm(window)
+    m = D_ISO.search(w)
     if m:
-        return m.group(1), "iso"
-    m = DEADLINE.search(clean_body)
+        return _mk(*m.groups())
+    m = D_MDY.search(w)
+    if m and m.group(1)[:3] in MON:
+        return _mk(m.group(3), MON[m.group(1)[:3]], m.group(2))
+    m = D_DMY.search(w)
+    if m and m.group(2)[:3] in MON:
+        return _mk(m.group(3), MON[m.group(2)[:3]], m.group(1))
+    m = D_NUM.search(w)
     if m:
-        return m.group(1).strip(), "text"
+        return _mk(m.group(3), m.group(2), m.group(1))   # ευρωπαϊκό ημ/μη/έτος
+    return None
+
+
+def find_deadline(raw: str, body: str):
+    m = ISO_ATTR.search(raw)                       # On the Move: μηχανικά αναγνώσιμο
+    if m:
+        return _mk(*m.groups()), "iso"
+    c = CUE.search(body)                           # αλλού: λέξη-οδηγός, μετά ημερομηνία
+    if c:
+        d = parse_date(body[c.end():c.end() + 90])
+        if d:
+            return d, "text"
     return None, None
 
 
@@ -163,7 +199,8 @@ YEAR = re.compile(r"\b(20\d{2})\b")
 
 
 def too_old(item) -> str:
-    """Επιστρέφει λόγο αν είναι παρελθόν, αλλιώς "". Δύο ανεξάρτητα μανταλάκια."""
+    """Λόγος αν είναι παρελθόν, αλλιώς "". Δύο μανταλάκια εδώ,
+    το τρίτο (προθεσμία που πέρασε) εφαρμόζεται αργότερα στη main."""
     if item["published"]:
         try:
             d = parsedate_to_datetime(item["published"])
@@ -188,6 +225,20 @@ def hits(text: str, terms) -> list:
     return [t for t in terms if norm(t) in text]
 
 
+WORDCHAR = "0-9a-zα-ωϊϋ"
+
+
+def hits_word(text: str, terms) -> list:
+    """Με όρια λέξης. Χωρίς αυτό, το 'dental' βρίσκεται μέσα σε γερμανικό κείμενο
+    και σβήνει αθώες εγγραφές — και τα σκληρά αρνητικά σβήνουν ΟΡΙΣΤΙΚΑ."""
+    out = []
+    for t in terms:
+        pat = f"(?<![{WORDCHAR}])" + re.escape(norm(t)) + f"(?![{WORDCHAR}])"
+        if re.search(pat, text):
+            out.append(t)
+    return out
+
+
 def classify(item, kw):
     """Καλάθια: pass / reject / noise / old. Επιστρέφει (bucket, reason, matches)."""
     t = norm(item["title"])
@@ -195,7 +246,7 @@ def classify(item, kw):
     full = norm(item["title"] + " " + item["body"])
 
     # 1. Σκληρά αρνητικά — βιομηχανική/επιστημονική κεραμική. Σε ΟΛΟ το κείμενο.
-    bad = hits(full, kw["negative_hard"])
+    bad = hits_word(full, kw["negative_hard"])
     if bad:
         return "noise", f"σκληρό αρνητικό: {bad[0]}", {}
 
@@ -262,7 +313,7 @@ def main():
     known = {i["link"] for i in inbox}
 
     rejected, tally = [], {}
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    now = TODAY
 
     for src, url in FEEDS.items():
         try:
@@ -289,10 +340,23 @@ def main():
                 continue
 
             bucket, reason, matches = classify(item, kw)
-            c[bucket] += 1
 
             if bucket == "pass":
                 dl, dl_kind = find_deadline(item["raw"], item["body"])
+
+                # Τρίτο μανταλάκι: αν ξέρουμε την προθεσμία και πέρασε, είναι νεκρό.
+                if dl and dl < TODAY:
+                    c["old"] += 1
+                    seen.add(k)
+                    continue
+
+                # Ένα «Biennale» με προθεσμία στο σώμα είναι open call, όχι εκδήλωση.
+                if reason == "event" and dl:
+                    reason = "open_call"
+
+            c[bucket] += 1
+
+            if bucket == "pass":
                 flags = hits(norm(item["body"]), kw["eligibility_flags"])
                 inbox.append({
                     "status": "pending", "kind": reason, "found": now,
