@@ -1,0 +1,50 @@
+{
+  "_σημείωση": "Όλα συγκρίνονται σε πεζά και ΧΩΡΙΣ τόνους. Γράψε τα εδώ όπως θες· το script τα κανονικοποιεί. Οι ελληνικές λέξεις είναι ΡΙΖΕΣ (χωρίς κατάληξη) ώστε να πιάνουν όλες τις πτώσεις.",
+
+  "material": [
+    "ceramic", "ceramics", "clay", "porcelain", "stoneware", "earthenware",
+    "terracotta", "pottery", "potter", "kiln", "glaze", "raku", "sculpture", "craft",
+    "keramik", "keramikk", "keramiek", "ceramique", "céramique", "gres", "grès",
+    "ceramica", "cerámica", "cerâmica", "ceràmica", "keramika", "ceramika",
+    "seramik", "kerámia", "kerámiai",
+    "κεραμικ", "κεραμει", "κεραμιστ", "πηλ", "αγγειοπλαστ", "πορσελαν"
+  ],
+
+  "opportunity": [
+    "open call", "opencall", "call for entries", "call for artists",
+    "call for applications", "call for proposals", "call for submissions",
+    "applications are open", "applications open", "applications close",
+    "now accepting", "submissions open", "deadline", "apply by", "entry deadline",
+    "competition", "contest", "prize", "award", "grant", "bursary", "fellowship",
+    "scholarship", "residency", "artist-in-residence", "biennale", "biennial",
+    "triennale", "triennial", "symposium", "juried",
+    "appel a candidatures", "appel à candidatures", "appel a projets",
+    "convocatoria", "concurso", "bando", "premio",
+    "ausschreibung", "wettbewerb", "bewerbung",
+    "oproep",
+    "προκηρυξ", "προσκλησ", "διαγωνισμ", "υποβολ", "αιτησ", "υποτροφ",
+    "παρατασ", "εκδηλωση ενδιαφεροντος", "δηλωσεις συμμετοχης", "συμμετοχ",
+    "βραβει", "residency", "καλλιτεχνικη φιλοξενια"
+  ],
+
+  "negative_hard": [
+    "ceramic coating", "ceramic tile", "ceramic pro", "paint protection",
+    "dental", "crown", "veneer", "brake", "bearing", "capacitor", "substrate",
+    "technical ceramics", "advanced ceramics", "refractory", "silicate",
+    "sanitaryware", "roof tile", "expanded clay", "enamel industry",
+    "cerame-unie", "ecers", "cookware", "non-stick"
+  ],
+
+  "negative_title": [
+    "αποτελεσματα", "ευχες", "γενικη συνελευση", "δελτιο τυπου", "εκλογες",
+    "is out now", "has been released", "interview", "exhibition review",
+    "studio visit", "in memoriam", "obituary", "job vacancy", "hiring",
+    "internship", "beginners workshop", "pottery class", "webinar", "podcast"
+  ],
+
+  "eligibility_flags": [
+    "us residents", "united states only", "must reside", "members only",
+    "under 35", "under 30", "students only", "eu citizens", "μελη",
+    "mediterranean", "europe-based"
+  ]
+}
