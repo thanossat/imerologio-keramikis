@@ -21,6 +21,7 @@
   --manganese:#77577A;   /* festival */
   --graphite:#6B7175;    /* conference */
   --copper:#A8412C;      /* today + deadlines */
+  --ciel:#5E97AE;        /* από τον ανιχνευτή */
 
   --row-h:48px;
   --label-w:268px;
@@ -213,10 +214,43 @@ button{font:inherit;color:inherit}
   border:1px solid currentColor;padding:2px 7px;border-radius:1px;
 }
 
+
+/* ---------- προθεσμίες (ευρήματα ανιχνευτή) ---------- */
+.opps{margin:0 0 22px;border:1px solid var(--rule);border-left:3px solid var(--ciel);background:#F1F2EE}
+.opps h2{
+  font-family:"IBM Plex Sans",sans-serif;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-soft);margin:0;padding:12px 18px 10px;
+  border-bottom:1px solid var(--rule);font-weight:500;
+}
+.opps ul{list-style:none;margin:0;padding:0}
+.opps li{
+  display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;
+  padding:11px 18px;border-bottom:1px solid rgba(199,202,194,.5);
+}
+.opps li:last-child{border-bottom:0}
+.opps .on{font-family:Alegreya,Georgia,serif;font-size:15px;flex:1 1 260px;min-width:0}
+.opps .on a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
+.opps .on a:hover{color:var(--ciel);border-color:var(--ciel)}
+.opps .od{font-size:12px;color:var(--copper);white-space:nowrap;font-variant-numeric:tabular-nums}
+.opps .od.far{color:var(--ink-soft)}
+.opps .os{
+  font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-soft);
+  border:1px solid var(--rule);padding:2px 6px;border-radius:1px;white-space:nowrap;
+}
+
+/* σιελ = ήρθε από τον ανιχνευτή */
+.row.new .label{box-shadow:inset 3px 0 0 var(--ciel)}
+.row.new.sel .label{box-shadow:inset 3px 0 0 var(--ink)}
+.row.new .t::after{
+  content:"";display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--ciel);margin-left:7px;vertical-align:2px;
+}
+.lg.ciel{background:var(--ciel)}
+
 .count{font-size:12px;color:var(--ink-soft);margin:14px 0 0}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-soft);max-width:70ch}
 footer a{color:var(--ink-soft)}
-.stamp{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);opacity:.75}
+.stamp{display:inline-block;margin-top:10px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);opacity:.75}
 
 @media (max-width:640px){
   .wrap{padding:24px 12px 48px}
@@ -247,6 +281,8 @@ footer a{color:var(--ink-soft)}
 
   <div class="legend" id="legend"></div>
 
+  <section class="opps" id="opps" hidden></section>
+
   <div class="scroller" id="scroller">
     <div class="grid" id="grid">
       <div class="head">
@@ -268,6 +304,7 @@ footer a{color:var(--ink-soft)}
 /* ============ data (loaded from data.json) ============ */
 let CO = {};
 let EV = [];
+let OP = [];
 let META = {};
 
 /* ============ i18n ============ */
@@ -278,7 +315,8 @@ const T = {
     cats:"Είδος", past:"Δείξε τα περασμένα", pastOn:"Κρύψε τα περασμένα",
     now:"σήμερα",
     types:{competition:"Διαγωνισμός",biennale:"Μπιενάλε",fair:"Φουάρ",festival:"Φεστιβάλ",conference:"Συνέδριο"},
-    lg:["Δεν ξεκίνησε","Σε εξέλιξη","Ολοκληρώθηκε","Προθεσμία αίτησης","Σήμερα"],
+    lg:["Δεν ξεκίνησε","Σε εξέλιξη","Ολοκληρώθηκε","Προθεσμία αίτησης","Σήμερα","Από τον ανιχνευτή"],
+    opps:"Ανοιχτές προθεσμίες", inDays:"σε {n} μέρες", dToday:"σήμερα", noD:"χωρίς προθεσμία",
     hint:"Διάλεξε μια μπάρα για λεπτομέρειες.",
     k:{dates:"Ημερομηνίες",place:"Τόπος",type:"Είδος",dl:"Προθεσμία αίτησης",status:"Κατάσταση",note:"Σημείωση"},
     nolink:"Δεν έχει καταγραφεί σύνδεσμος για αυτή τη διοργάνωση.",
@@ -292,7 +330,7 @@ const T = {
     count:"{n} από {tot} events · {d} ανοιχτές προθεσμίες",
     approx:"κατά προσέγγιση",
     months:["Ιαν","Φεβ","Μάρ","Απρ","Μάι","Ιούν","Ιούλ","Αύγ","Σεπ","Οκτ","Νοέ","Δεκ"],
-    footer:'Δεδομένα από το <a href="https://www.ceramicsnow.org/calendar2026/">Ceramics Calendar 2026</a> και το <a href="https://www.ceramicsnow.org/calendar2025/">2025</a> του Ceramics Now, όπως διαβάστηκαν στις 9 Ιουλίου 2026. Ορισμένες ημερομηνίες δίνονται μόνο ως μήνας — αυτές οι μπάρες εμφανίζονται με διαγράμμιση στο τέλος. Επιβεβαίωσε πάντα στην επίσημη σελίδα κάθε διοργάνωσης.',
+    footer:"Δεδομένα:",
     dot:"Στην Ελλάδα"
   },
   en:{
@@ -301,7 +339,8 @@ const T = {
     cats:"Type", past:"Show past events", pastOn:"Hide past events",
     now:"today",
     types:{competition:"Competition",biennale:"Biennale",fair:"Fair",festival:"Festival",conference:"Conference"},
-    lg:["Not started","Running now","Finished","Application deadline","Today"],
+    lg:["Not started","Running now","Finished","Application deadline","Today","Found by the scanner"],
+    opps:"Open deadlines", inDays:"in {n} days", dToday:"today", noD:"no deadline",
     hint:"Select a bar for details.",
     k:{dates:"Dates",place:"Place",type:"Type",dl:"Application deadline",status:"Status",note:"Note"},
     nolink:"No website recorded for this event.",
@@ -315,7 +354,7 @@ const T = {
     count:"{n} of {tot} events · {d} open deadlines",
     approx:"approximate",
     months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-    footer:'Data from Ceramics Now\'s <a href="https://www.ceramicsnow.org/calendar2026/">Ceramics Calendar 2026</a> and <a href="https://www.ceramicsnow.org/calendar2025/">2025</a>, as read on 9 July 2026. Some dates are given only as a month — those bars are hatched at the end. Always confirm on each organiser\'s own page.',
+    footer:"Data:",
     dot:"In Greece"
   }
 };
@@ -363,7 +402,17 @@ function chrome(){
     META.version ? t.version.replace("{v}", META.version) : "",
     META.last_checked ? t.checked.replace("{d}", META.last_checked) : ""
   ].filter(Boolean).join(" · ");
-  document.getElementById("footer").innerHTML = t.footer + (stamp ? `<br><br><span class="stamp">${stamp}</span>` : "");
+
+  // list only the sources that at least one event actually cites
+  const used = new Set(EV.map(e => e.source));
+  const srcs = (META.sources || [])
+    .filter(s => used.has(s.id))
+    .map(s => s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>` : s.name)
+    .join(" · ");
+
+  document.getElementById("footer").innerHTML =
+    (srcs ? `${t.footer} ${srcs}` : "") +
+    (stamp ? `<br><span class="stamp">${stamp}</span>` : "");
   document.getElementById("btn-el").setAttribute("aria-pressed", lang==="el");
   document.getElementById("btn-en").setAttribute("aria-pressed", lang==="en");
 
@@ -382,7 +431,7 @@ function chrome(){
     cats.appendChild(b);
   });
 
-  const cls = ["green","live","fired","cone","now"];
+  const cls = ["green","live","fired","cone","now","ciel"];
   document.getElementById("legend").innerHTML = t.lg
     .map((s,i) => `<div><i class="lg ${cls[i]}"></i>${s}</div>`).join("");
 
@@ -409,7 +458,7 @@ function draw(){
   list.forEach(ev => {
     const st = status(ev);
     const row = document.createElement("div");
-    row.className = "row" + (sel === ev ? " sel" : "");
+    row.className = "row" + (sel === ev ? " sel" : "") + (ev.origin === "scanner" ? " new" : "");
 
     const lab = document.createElement("div");
     lab.className = "label";
@@ -419,7 +468,7 @@ function draw(){
       : `<span title="${t.nolink}">${ev.title}</span>`;
     lab.innerHTML =
       `<span class="t">${dot}${name}</span>` +
-      `<span class="m">${t.types[ev.category]} · ${ev.city}, ${CO[ev.country][lang==="el"?1:0]}</span>`;
+      `<span class="m">${t.types[ev.category]} · ${place(ev)}</span>`;
     const a = lab.querySelector("a"); if (a) a.onclick = e => e.stopPropagation();
     lab.onclick = () => { sel = ev; draw(); detail(); };
     row.appendChild(lab);
@@ -464,6 +513,11 @@ function draw(){
     .replace("{n}", list.length).replace("{tot}", EV.length).replace("{d}", openDeadlines());
 }
 
+function place(e){
+  const co = e.country && CO[e.country] ? CO[e.country][lang==="el"?1:0] : "";
+  return [e.city, co].filter(Boolean).join(", ") || (META.sources||[]).find(s=>s.id===e.source)?.name || "—";
+}
+
 function detail(){
   const t = T[lang], box = document.getElementById("detail");
   if (!sel){ box.innerHTML = `<p class="hint">${t.hint}</p>`; return; }
@@ -484,14 +538,35 @@ function detail(){
     <h2 style="margin-top:10px">${sel.title}</h2>
     <dl class="kv">
       <div><dt>${t.k.dates}</dt><dd>${fmt(sel.start)} – ${fmt(sel.end)}${sel.approx_end?` <span style="opacity:.6">(${t.approx})</span>`:""}</dd></div>
-      <div><dt>${t.k.place}</dt><dd>${sel.city}, ${CO[sel.country][lang==="el"?1:0]}</dd></div>
+      <div><dt>${t.k.place}</dt><dd>${place(sel)}</dd></div>
       <div><dt>${t.k.status}</dt><dd>${t.st[st]}</dd></div>
       ${dl}${note}
     </dl>
     ${link}`;
 }
 
-function setLang(l){ lang = l; chrome(); months(); draw(); }
+function opps(){
+  const t = T[lang], box = document.getElementById("opps");
+  const live = OP.filter(o => !o.deadline || o.deadline >= NOW.toISOString().slice(0,10))
+                 .sort((a,b) => (a.deadline||"9999").localeCompare(b.deadline||"9999"));
+  if (!live.length){ box.hidden = true; return; }
+  box.hidden = false;
+
+  box.innerHTML = `<h2>${t.opps} · ${live.length}</h2><ul>` + live.map(o => {
+    let when = `<span class="od far">${t.noD}</span>`;
+    if (o.deadline){
+      const n = daysTo(o.deadline);
+      const note = n === 0 ? t.dToday : t.inDays.replace("{n}", n);
+      when = `<span class="od${n > 45 ? " far" : ""}">${fmt(o.deadline)} · ${note}</span>`;
+    }
+    const name = o.url ? `<a href="${o.url}" target="_blank" rel="noopener">${o.title}</a>` : o.title;
+    const src = (META.sources||[]).find(s => s.id === o.source);
+    return `<li><span class="on">${name}</span>${when}` +
+           (src ? `<span class="os">${src.name}</span>` : "") + `</li>`;
+  }).join("") + "</ul>";
+}
+
+function setLang(l){ lang = l; chrome(); months(); draw(); opps(); }
 
 document.getElementById("btn-el").onclick = () => setLang("el");
 document.getElementById("btn-en").onclick = () => setLang("en");
@@ -504,7 +579,7 @@ async function boot(){
     const r = await fetch("data.json", {cache:"no-store"});
     if (!r.ok) throw new Error(r.status);
     const j = await r.json();
-    CO = j.countries; EV = j.events; META = j;
+    CO = j.countries; EV = j.events; OP = j.opportunities || []; META = j;
   } catch (err) {
     console.error(err);
     document.getElementById("scroller").style.display = "none";
@@ -512,7 +587,7 @@ async function boot(){
     return;
   }
   EV.sort((a,b) => a.start.localeCompare(b.start) || a.title.localeCompare(b.title));
-  chrome(); months(); draw();
+  chrome(); months(); draw(); opps();
 
   const sc = document.getElementById("scroller");
   sc.scrollLeft = Math.max(0, x(NOW) - sc.clientWidth * 0.35);
