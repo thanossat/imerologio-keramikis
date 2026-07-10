@@ -90,7 +90,7 @@ button{font:inherit;color:inherit}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--slip)}
 
 /* ---------- legend ---------- */
-.legend{display:flex;flex-wrap:wrap;gap:8px 26px;margin:0 0 16px;font-size:12px;color:var(--ink-soft)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;margin:0 0 16px;font-size:12px;color:var(--ink-soft)}
 .legend div{display:flex;align-items:center;gap:9px}
 .lg{width:30px;height:12px;border-radius:1px;flex:none}
 .lg.green{border:1.5px solid var(--celadon);background:transparent}
@@ -216,6 +216,7 @@ button{font:inherit;color:inherit}
 .count{font-size:12px;color:var(--ink-soft);margin:14px 0 0}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-soft);max-width:70ch}
 footer a{color:var(--ink-soft)}
+.stamp{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);opacity:.75}
 
 @media (max-width:640px){
   .wrap{padding:24px 12px 48px}
@@ -277,11 +278,12 @@ const T = {
     cats:"Είδος", past:"Δείξε τα περασμένα", pastOn:"Κρύψε τα περασμένα",
     now:"σήμερα",
     types:{competition:"Διαγωνισμός",biennale:"Μπιενάλε",fair:"Φουάρ",festival:"Φεστιβάλ",conference:"Συνέδριο"},
-    lg:["Άψητο — δεν ξεκίνησε","Στη φωτιά — σε εξέλιξη","Ψημένο — ολοκληρώθηκε","Προθεσμία αίτησης","Σήμερα"],
+    lg:["Δεν ξεκίνησε","Σε εξέλιξη","Ολοκληρώθηκε","Προθεσμία αίτησης","Σήμερα"],
     hint:"Διάλεξε μια μπάρα για λεπτομέρειες.",
     k:{dates:"Ημερομηνίες",place:"Τόπος",type:"Είδος",dl:"Προθεσμία αίτησης",status:"Κατάσταση",note:"Σημείωση"},
     nolink:"Δεν έχει καταγραφεί σύνδεσμος για αυτή τη διοργάνωση.",
-    checked:"Τελευταίος έλεγχος δεδομένων: {d}",
+    checked:"τελευταίος έλεγχος {d}",
+    version:"έκδοση δεδομένων {v}",
     loading:"Φόρτωση δεδομένων…",
     error:"Δεν φόρτωσε το data.json. Αν άνοιξες το αρχείο τοπικά με διπλό κλικ, ο browser μπλοκάρει το fetch — τρέξε <code>python3 -m http.server</code> στον φάκελο, ή δες τη σελίδα από το GitHub Pages.",
     st:{upcoming:"Δεν έχει ξεκινήσει",live:"Σε εξέλιξη",past:"Ολοκληρώθηκε"},
@@ -299,11 +301,12 @@ const T = {
     cats:"Type", past:"Show past events", pastOn:"Hide past events",
     now:"today",
     types:{competition:"Competition",biennale:"Biennale",fair:"Fair",festival:"Festival",conference:"Conference"},
-    lg:["Greenware — not started","In the kiln — running now","Fired — finished","Application deadline","Today"],
+    lg:["Not started","Running now","Finished","Application deadline","Today"],
     hint:"Select a bar for details.",
     k:{dates:"Dates",place:"Place",type:"Type",dl:"Application deadline",status:"Status",note:"Note"},
     nolink:"No website recorded for this event.",
-    checked:"Data last checked: {d}",
+    checked:"last checked {d}",
+    version:"data version {v}",
     loading:"Loading data…",
     error:"Could not load data.json. If you opened this file directly, the browser blocks fetch — run <code>python3 -m http.server</code> in the folder, or view it via GitHub Pages.",
     st:{upcoming:"Not started",live:"Running now",past:"Finished"},
@@ -356,7 +359,11 @@ function chrome(){
   document.getElementById("title").textContent = t.title;
   document.getElementById("lede").innerHTML = t.lede;
   document.getElementById("l-cats").textContent = t.cats;
-  document.getElementById("footer").innerHTML = t.footer + (META.last_checked ? `<br><br>${t.checked.replace("{d}", META.last_checked)}` : "");
+  const stamp = [
+    META.version ? t.version.replace("{v}", META.version) : "",
+    META.last_checked ? t.checked.replace("{d}", META.last_checked) : ""
+  ].filter(Boolean).join(" · ");
+  document.getElementById("footer").innerHTML = t.footer + (stamp ? `<br><br><span class="stamp">${stamp}</span>` : "");
   document.getElementById("btn-el").setAttribute("aria-pressed", lang==="el");
   document.getElementById("btn-en").setAttribute("aria-pressed", lang==="en");
 
