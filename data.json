@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "last_checked": "2026-07-10",
+  "version": 3,
+  "last_checked": "2026-07-18",
   "sources": [
     {
       "id": "cn2025",
@@ -240,6 +240,19 @@
       "origin": "manual"
     },
     {
+      "id": "cal-2026",
+      "kind": "event",
+      "category": "fair",
+      "title": "Ceramic Art London 2026",
+      "start": "2026-05-08",
+      "end": "2026-05-10",
+      "city": "London",
+      "country": "UK",
+      "url": "https://www.ceramicartlondon.com/",
+      "source": "cn2026",
+      "origin": "manual"
+    },
+    {
       "id": "manises-17",
       "kind": "event",
       "category": "competition",
@@ -250,19 +263,6 @@
       "city": "Manises",
       "country": "ES",
       "url": "https://www.museumanises.es/va/page/xvii-biennal-internacional-ceramica-manises",
-      "source": "cn2026",
-      "origin": "manual"
-    },
-    {
-      "id": "cal-2026",
-      "kind": "event",
-      "category": "fair",
-      "title": "Ceramic Art London 2026",
-      "start": "2026-05-08",
-      "end": "2026-05-10",
-      "city": "London",
-      "country": "UK",
-      "url": "https://www.ceramicartlondon.com/",
       "source": "cn2026",
       "origin": "manual"
     },
@@ -400,19 +400,6 @@
       "origin": "manual"
     },
     {
-      "id": "siegburg-market-2026",
-      "kind": "event",
-      "category": "fair",
-      "title": "International Ceramics Market Siegburg 2026",
-      "start": "2026-07-11",
-      "end": "2026-07-12",
-      "city": "Siegburg",
-      "country": "DE",
-      "url": null,
-      "source": "cn2026",
-      "origin": "manual"
-    },
-    {
       "id": "saint-sulpice-2026",
       "kind": "event",
       "category": "fair",
@@ -461,6 +448,19 @@
       "city": "Grottaglie",
       "country": "IT",
       "url": "https://comune.grottaglie.ta.it/it/news/disciplinare-xxxiii-concorso-di-ceramica-contemporanea-mediterraneo-grottaglie-4-luglio-18-ottobre-2026",
+      "source": "cn2026",
+      "origin": "manual"
+    },
+    {
+      "id": "siegburg-market-2026",
+      "kind": "event",
+      "category": "fair",
+      "title": "International Ceramics Market Siegburg 2026",
+      "start": "2026-07-11",
+      "end": "2026-07-12",
+      "city": "Siegburg",
+      "country": "DE",
+      "url": null,
       "source": "cn2026",
       "origin": "manual"
     },
@@ -654,5 +654,15 @@
       "origin": "manual"
     }
   ],
-  "opportunities": []
+  "opportunities": [
+    {
+      "id": "international-open-call-indian-ceramics-triennal",
+      "title": "International Open Call – Indian Ceramics Triennale",
+      "url": "https://artaxis.org/international-open-call-indian-ceramics-triennale/",
+      "source": "artaxis",
+      "origin": "scanner",
+      "added": "2026-07-18",
+      "kind": "open_call"
+    }
+  ]
 }
