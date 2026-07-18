@@ -109,6 +109,7 @@ DUE_DATE = re.compile(r"([a-z]+)\s+(\d{1,2}),?\s+(\d{4})", re.I)
 
 
 def parse_deadline(block):
+    block = clean(block)
     m = DUE.search(block)
     if not m:
         return None
@@ -120,8 +121,23 @@ def parse_deadline(block):
 
 # ---- εξαγωγή events από το markdown της σελίδας
 
-ROW = re.compile(r"\[\*\*(.+?)\*\*\]\((https?://[^)]+)\)(.*?)(?=\[\*\*|\Z)", re.S)
+# Ένα event στο HTML:
+#   <a href="URL" ...><strong>ΤΙΤΛΟΣ</strong></a><br />
+#   <em>ΚΑΤΗΓΟΡΙΑ</em><br />
+#   ΗΜΕΡΟΜΗΝΙΕΣ<br />
+#   ΠΟΛΗ, ΧΩΡΑ</p>
+ROW = re.compile(
+    r'<a[^>]*href="(?P<url>https?://[^"]+)"[^>]*>\s*<strong>(?P<title>.*?)</strong>\s*</a>'
+    r'(?P<tail>.*?)</p>',
+    re.S | re.I)
 
+TAGS = re.compile(r"<[^>]+>")
+
+
+def clean(s):
+    s = html.unescape(s)
+    s = s.replace("\u2013", "-").replace("\u2014", "-")
+    return re.sub(r"\s+", " ", TAGS.sub(" ", s)).strip()
 
 def slug(s):
     s = unicodedata.normalize("NFD", s.lower())
@@ -138,25 +154,31 @@ def fetch(url):
 def extract(md):
     out = []
     for m in ROW.finditer(md):
-        title = html.unescape(m.group(1)).strip()
-        url = m.group(2).strip()
-        tail = [l.strip() for l in m.group(3).splitlines() if l.strip()]
-        if not tail:
+        title = clean(m.group("title"))
+        url = m.group("url").strip()
+        tail_html = m.group("tail")
+        # οι γραμμές χωρίζονται με <br />
+        parts = [clean(x) for x in re.split(r"<br\s*/?>", tail_html, flags=re.I)]
+        parts = [x for x in parts if x]
+        if not title or not parts:
             continue
 
         cat = "competition"
-        if tail and tail[0].startswith("*"):
-            raw = tail[0].strip("*").lower()
+        for ln in parts:
+            low = ln.lower()
             for kw, c in CATEGORY.items():
-                if kw in raw:
+                if kw in low:
                     cat = c
                     break
+            else:
+                continue
+            break
 
         start = end = None
         approx = False
         country = None
         city = ""
-        for ln in tail[1:]:
+        for ln in parts:
             if re.search(r"\b20\d{2}\b", ln) and start is None:
                 start, end, approx = parse_range(ln)
             up = ln.rsplit(",", 1)
@@ -167,7 +189,7 @@ def extract(md):
         out.append({
             "title": title, "url": url, "category": cat,
             "start": start, "end": end, "approx_end": approx,
-            "deadline": parse_deadline(m.group(3)),
+            "deadline": parse_deadline(m.group("tail")),
             "city": city, "country": country,
         })
     return out
