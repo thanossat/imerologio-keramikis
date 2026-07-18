@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "last_checked": "2026-07-18",
   "sources": [
     {
@@ -120,6 +120,21 @@
       "Ινδία"
     ]
   },
-  "events": [],
+  "events": [
+    {
+      "id": "parcours-ceramique-carouge-2026",
+      "title": "Parcours Céramique Carouge 2026",
+      "url": "https://parcoursceramiquecarouge.com/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-07-18",
+      "kind": "event",
+      "category": "biennale",
+      "start": "2026-09-19",
+      "end": "2026-09-27",
+      "city": "Carouge, Geneva",
+      "country": "CH"
+    }
+  ],
   "opportunities": []
 }
