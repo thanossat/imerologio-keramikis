@@ -1,0 +1,15 @@
+[Unit]
+Description=Ceramics calendar Telegram bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=thanos
+WorkingDirectory=/home/thanos/keramika
+ExecStart=/usr/bin/python3 /home/thanos/keramika/bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
