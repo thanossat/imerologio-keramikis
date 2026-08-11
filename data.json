@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -169,6 +169,15 @@
       "id": "call-for-entry-baltimore-clayworks-clay-biennial",
       "title": "Call for Entry: Baltimore Clayworks Clay Biennial Juried by Ching Yuan Chang",
       "url": "https://artaxis.org/call-for-entry-baltimore-clayworks-clay-biennial-juried-by-ching-yuan-chang/",
+      "source": "artaxis",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "open_call"
+    },
+    {
+      "id": "wayne-art-center-craftforms-2026-call-for-entry",
+      "title": "Wayne Art Center CraftForms 2026 Call for Entry",
+      "url": "https://artaxis.org/wayne-art-center-craftforms-2026-call-for-entry/",
       "source": "artaxis",
       "origin": "scanner",
       "added": "2026-08-11",
