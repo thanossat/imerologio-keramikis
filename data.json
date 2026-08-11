@@ -1,5 +1,5 @@
 {
-  "version": 20,
+  "version": 21,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -204,6 +204,20 @@
       "end": "2026-06-28",
       "city": "Place Saint Sulpice, Paris",
       "country": "FR"
+    },
+    {
+      "id": "international-ceramics-days-oldenburg-2026",
+      "title": "International Ceramics Days Oldenburg 2026",
+      "url": "https://en.keramiktage.com/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "fair",
+      "start": "2026-08-01",
+      "end": "2026-08-02",
+      "city": "Oldenburg",
+      "country": "DE"
     },
     {
       "id": "argilla-italia-2026",
