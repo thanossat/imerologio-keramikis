@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -151,6 +151,15 @@
       "id": "call-for-entries-3rd-annual-mudflat-cup-show",
       "title": "Call for Entries: 3rd Annual Mudflat Cup Show!",
       "url": "https://artaxis.org/call-for-entries-3rd-annual-mudflat-cup-show/",
+      "source": "artaxis",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "open_call"
+    },
+    {
+      "id": "call-for-entries-shino-odyssey",
+      "title": "Call for Entries: Shino Odyssey",
+      "url": "https://artaxis.org/call-for-entries-shino-odyssey/",
       "source": "artaxis",
       "origin": "scanner",
       "added": "2026-08-11",
