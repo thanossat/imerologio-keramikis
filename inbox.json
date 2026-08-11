@@ -630,58 +630,6 @@
     "status": "pending",
     "kind": "open_call",
     "found": "2026-07-18",
-    "source": "cnw",
-    "title": "Open call for ceramic artists: Ceramics Now Annual",
-    "link": "https://ceramicsnow.substack.com/p/open-call-for-ceramic-artists-ceramics",
-    "published": "Tue, 23 Jun 2026 14:05:53 GMT",
-    "deadline": null,
-    "deadline_kind": null,
-    "eligibility_flags": [],
-    "matched": {
-      "material": [
-        "ceramic",
-        "ceramics"
-      ],
-      "opportunity": [
-        "open call"
-      ],
-      "event": []
-    },
-    "excerpt": "To celebrate 16 years of Ceramics Now in December, we are delighted to invite ceramic artists from around the world to be part of the first Ceramics Now Annual publication",
-    "cid": "9aa7f65aa073",
-    "notified": true
-  },
-  {
-    "status": "pending",
-    "kind": "open_call",
-    "found": "2026-07-18",
-    "source": "artaxis",
-    "title": "International Open Call – Indian Ceramics Triennale",
-    "link": "https://artaxis.org/international-open-call-indian-ceramics-triennale/",
-    "published": "Fri, 03 Apr 2026 13:37:20 +0000",
-    "deadline": null,
-    "deadline_kind": null,
-    "eligibility_flags": [],
-    "matched": {
-      "material": [
-        "ceramic",
-        "ceramics"
-      ],
-      "opportunity": [
-        "open call"
-      ],
-      "event": [
-        "triennale"
-      ]
-    },
-    "excerpt": "Indian Ceramics Triennale, EDITION 3 coming up! Building on the success of the previous 2 editions, Breaking Ground in 2018 at the Jawahar Kala Kendra, Jaipur and Common Ground in 2024 at Arthshila, New Delhi, we are excited to announce the 3rd edition of the Indian Ceramics Trie",
-    "cid": "07f67e93b282",
-    "notified": true
-  },
-  {
-    "status": "pending",
-    "kind": "open_call",
-    "found": "2026-07-18",
     "source": "katlas",
     "title": "Wettbewerbsausstellung zum Keramikmarkt Höhr-Grenzhausen 2026",
     "link": "https://keramik-atlas.de/wettbewerbsausstellung-zum-keramikmarkt-hoehr-grenzhausen-2026/",
