@@ -1,5 +1,5 @@
 {
-  "version": 23,
+  "version": 24,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -288,6 +288,20 @@
       "end": "2026-11-13",
       "city": "Fondazione Officine Saffi, Milan",
       "country": "IT"
+    },
+    {
+      "id": "biennale-of-contemporary-keramics-2026",
+      "title": "Biennale of Contemporary Keramics 2026",
+      "url": "https://bigbluedot.art/bck-2026/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "biennale",
+      "start": "2026-10-01",
+      "end": "2026-10-31",
+      "city": "Rhodes",
+      "country": "GR"
     },
     {
       "id": "c14-paris-2026",
