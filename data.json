@@ -1,5 +1,5 @@
 {
-  "version": 10,
+  "version": 11,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -121,6 +121,20 @@
     ]
   },
   "events": [
+    {
+      "id": "saint-sulpice-ceramique-2026",
+      "title": "Saint-Sulpice Céramique 2026",
+      "url": "https://saintsulpiceceramique.com/en/home/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "fair",
+      "start": "2026-06-25",
+      "end": "2026-06-28",
+      "city": "Place Saint Sulpice, Paris",
+      "country": "FR"
+    },
     {
       "id": "parcours-ceramique-carouge-2026",
       "title": "Parcours Céramique Carouge 2026",
