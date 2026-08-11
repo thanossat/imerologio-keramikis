@@ -1,5 +1,5 @@
 {
-  "version": 13,
+  "version": 14,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -121,6 +121,20 @@
     ]
   },
   "events": [
+    {
+      "id": "loewe-craft-prize-2026",
+      "title": "LOEWE Craft Prize 2026",
+      "url": "https://craftprize.loewe.com/en/craftprize2026",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "competition",
+      "start": "2026-05-13",
+      "end": "2026-06-14",
+      "city": "National Gallery",
+      "country": "SG"
+    },
     {
       "id": "cerartmic-madrid-2026",
       "title": "cerARTmic Madrid 2026",
