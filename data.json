@@ -1,5 +1,5 @@
 {
-  "version": 15,
+  "version": 16,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -121,6 +121,20 @@
     ]
   },
   "events": [
+    {
+      "id": "6th-siegburg-international-ceramics-award",
+      "title": "6th Siegburg International Ceramics Award",
+      "url": "https://tourismus-siegburg.de/keramik-in-siegburg/keramikpreis/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "competition",
+      "start": "2026-02-01",
+      "end": "2026-04-12",
+      "city": "Siegburg",
+      "country": "DE"
+    },
     {
       "id": "ceramic-art-london-2026",
       "title": "Ceramic Art London 2026",
