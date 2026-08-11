@@ -1,5 +1,5 @@
 {
-  "version": 18,
+  "version": 19,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -218,6 +218,20 @@
       "end": "2026-09-27",
       "city": "Carouge, Geneva",
       "country": "CH"
+    },
+    {
+      "id": "6th-officine-saffi-award",
+      "title": "6th Officine Saffi Award",
+      "url": "https://officinesaffi.org/en/award/award",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "competition",
+      "start": "2026-09-30",
+      "end": "2026-11-13",
+      "city": "Fondazione Officine Saffi, Milan",
+      "country": "IT"
     },
     {
       "id": "c14-paris-2026",
