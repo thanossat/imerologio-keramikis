@@ -1,5 +1,5 @@
 {
-  "version": 19,
+  "version": 20,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -204,6 +204,20 @@
       "end": "2026-06-28",
       "city": "Place Saint Sulpice, Paris",
       "country": "FR"
+    },
+    {
+      "id": "argilla-italia-2026",
+      "title": "Argillà Italia 2026",
+      "url": "https://www.argilla-italia.it/en/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "fair",
+      "start": "2026-09-04",
+      "end": "2026-09-06",
+      "city": "Faenza",
+      "country": "IT"
     },
     {
       "id": "parcours-ceramique-carouge-2026",
