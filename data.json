@@ -1,5 +1,5 @@
 {
-  "version": 14,
+  "version": 15,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -121,6 +121,20 @@
     ]
   },
   "events": [
+    {
+      "id": "ceramic-art-london-2026",
+      "title": "Ceramic Art London 2026",
+      "url": "https://www.ceramicartlondon.com/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "fair",
+      "start": "2026-05-08",
+      "end": "2026-05-10",
+      "city": "London",
+      "country": "UK"
+    },
     {
       "id": "loewe-craft-prize-2026",
       "title": "LOEWE Craft Prize 2026",
