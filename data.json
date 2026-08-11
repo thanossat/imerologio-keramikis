@@ -1,5 +1,5 @@
 {
-  "version": 17,
+  "version": 18,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -218,6 +218,20 @@
       "end": "2026-09-27",
       "city": "Carouge, Geneva",
       "country": "CH"
+    },
+    {
+      "id": "c14-paris-2026",
+      "title": "C14 Paris 2026",
+      "url": "https://c14paris.com/en/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "fair",
+      "start": "2026-10-01",
+      "end": "2026-10-04",
+      "city": "Paris",
+      "country": "FR"
     },
     {
       "id": "ceramic-brussels-2027",
