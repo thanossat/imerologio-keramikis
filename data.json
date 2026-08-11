@@ -1,5 +1,5 @@
 {
-  "version": 22,
+  "version": 23,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -204,6 +204,20 @@
       "end": "2026-06-28",
       "city": "Place Saint Sulpice, Paris",
       "country": "FR"
+    },
+    {
+      "id": "33rd-mediterraneo-contemporary-ceramics-competit",
+      "title": "33rd Mediterraneo Contemporary Ceramics Competition",
+      "url": "https://comune.grottaglie.ta.it/it/news/disciplinare-xxxiii-concorso-di-ceramica-contemporanea-mediterraneo-grottaglie-4-luglio-18-ottobre-2026",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "competition",
+      "start": "2026-07-04",
+      "end": "2026-10-18",
+      "city": "Grottaglie",
+      "country": "IT"
     },
     {
       "id": "2026-taiwan-ceramics-biennale",
