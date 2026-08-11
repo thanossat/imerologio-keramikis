@@ -1,5 +1,5 @@
 {
-  "version": 16,
+  "version": 17,
   "last_checked": "2026-08-11",
   "sources": [
     {
@@ -218,6 +218,20 @@
       "end": "2026-09-27",
       "city": "Carouge, Geneva",
       "country": "CH"
+    },
+    {
+      "id": "ceramic-brussels-2027",
+      "title": "ceramic brussels 2027",
+      "url": "https://ceramic.brussels/en/",
+      "source": "cn-calendar",
+      "origin": "scanner",
+      "added": "2026-08-11",
+      "kind": "event",
+      "category": "fair",
+      "start": "2027-01-20",
+      "end": "2027-01-24",
+      "city": "Brussels",
+      "country": "BE"
     }
   ],
   "opportunities": [
