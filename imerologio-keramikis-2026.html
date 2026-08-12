@@ -56,8 +56,9 @@ h1{
 /* ---------- controls ---------- */
 .bar{
   display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
-  padding:14px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:14px 8px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
   margin-bottom:22px;
+  position:sticky;top:0;z-index:20;background:var(--slip);
 }
 .group{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .glabel{
@@ -91,18 +92,18 @@ button{font:inherit;color:inherit}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--slip)}
 
 /* ---------- legend ---------- */
-.legend{display:flex;flex-wrap:wrap;gap:8px 22px;margin:0 0 16px;font-size:12px;color:var(--ink-soft)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;margin:0 0 16px;font-size:12px;color:var(--ink-soft);background:var(--slip);position:relative;z-index:19}
 .legend div{display:flex;align-items:center;gap:9px}
 .lg{width:30px;height:12px;border-radius:1px;flex:none}
 .lg.green{border:1.5px solid var(--celadon);background:transparent}
 .lg.live{background:var(--celadon)}
 .lg.fired{background:var(--celadon);opacity:.24}
-.lg.cone{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid var(--copper);border-radius:0}
+.lg.cone{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:13px solid var(--copper);border-radius:0}
 .lg.now{width:2px;height:14px;background:var(--copper)}
 
 /* ---------- chart ---------- */
 .scroller{
-  overflow:auto;max-height:min(70vh,720px);
+  overflow:auto;max-height:min(80vh,820px);overscroll-behavior:contain;
   border:1px solid var(--rule);background:#F1F2EE;
   position:relative;
 }
